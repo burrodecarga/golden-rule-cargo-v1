@@ -16,6 +16,12 @@ servicio_id,
             backgroundColor,
             textColor`
     )
+
+    if (error) {
+        console.log(error)
+    }
+
+    return events
 }
 
 export type FetchEventsQuery=QueryData<typeof allEvents>

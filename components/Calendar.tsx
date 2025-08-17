@@ -135,17 +135,17 @@ const Calendar: React.FC=() => {
         textColor: 'black'
       }
 
-      const newEventToBd={
-        id: newId,
-        title: newEventTitle,
-        start: selectedDate.start.toLocaleString(),
-        end: selectedDate.end.toLocaleString(),
-        allDay: isAllDay,
-        servicio_id: '00-00-00',
-        editable: true,
-        backgroundColor: 'yellow',
-        textColor: 'black'
-      }
+      // const newEventToBd={
+      //   id: newId,
+      //   title: newEventTitle,
+      //   start: selectedDate.start.toLocaleString(),
+      //   end: selectedDate.end.toLocaleString(),
+      //   allDay: isAllDay,
+      //   servicio_id: '00-00-00',
+      //   editable: true,
+      //   backgroundColor: 'yellow',
+      //   textColor: 'black'
+      // }
 
       const startD=selectedDate.start
       const endD=selectedDate.end
