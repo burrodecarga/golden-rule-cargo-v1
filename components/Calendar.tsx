@@ -6,6 +6,7 @@ import {
   DateSelectArg,
   EventClickArg,
   EventApi,
+  EventChangeArg
 } from "@fullcalendar/core"
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
@@ -15,26 +16,22 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog"
 import { superSupabase } from "@/lib/supabase/oterClient"
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from "uuid"
 import { FetchEvents } from "@/lib/api"
 import { DataFullCalenda, Evento } from "@/types/util_types"
-
-
-
+import Link from "next/link"
 
 const Calendar: React.FC=() => {
   const [currentEvents, setCurrentEvents]=useState<EventApi[]>([])
-  const [newCurrentEvents, setNewCurrentEvents]=useState<FetchEvents|Evento|null>()
+  const [newCurrentEvents, setNewCurrentEvents]=useState<
+    FetchEvents|Evento|null
+  >()
   const [isDialogOpen, setIsDialogOpen]=useState<boolean>(false)
   const [newEventTitle, setNewEventTitle]=useState<string>("")
   const [selectedDate, setSelectedDate]=useState<DateSelectArg|null>(null)
-
-
-
-
 
   const getEventos=async () => {
     const { data }=await superSupabase.from("events").select("*")
@@ -45,22 +42,17 @@ const Calendar: React.FC=() => {
     setNewCurrentEvents(data)
   }
 
-
-
   useEffect(() => {
     getEventos()
-  }, [currentEvents])
-
+  }, [])
 
   useEffect(() => {
-
     // Load events from local storage when the component mounts
     if (typeof window!=="undefined") {
       localStorage.removeItem("events")
       const savedEvents=localStorage.getItem("events")
       if (savedEvents) {
         setCurrentEvents(JSON.parse(savedEvents))
-
       }
       localStorage.removeItem("events")
       console.log("BORRANDO EVENTOS")
@@ -80,35 +72,45 @@ const Calendar: React.FC=() => {
   }
 
   const handleEventClick=(selected: EventClickArg) => {
-    // Prompt user for confirmation before deleting an event
-    // if (
-    //   window.confirm(
-    //     `Are you sure you want to delete the event "${selected.event.title}"?`
-    //   )
-    // ) {
-    //   selected.event.remove()
-    // }
+    const ruta=`/protected/servicios/servicio/?${selected.event.id}`
+    //Prompt user for confirmation before deleting an event
+    if (
+      window.confirm(
+        `Are you sure you want to delete the event "${selected.event.title}"?`
+      )
+    ) {
+      window.location.href=ruta
+      //selected.event.remove()
+    }
+  }
+
+  const updateEvent=async (arg: EventChangeArg) => {
+
+    const startD=arg.event.start
+    const endD=arg.event.end
+    console.log('START STR', startD)
+    const { data, error }=await superSupabase
+      .from("events")
+      .update({ start: startD?.toDateString(), end: endD?.toDateString() })
+      .eq("id", arg.event.id)
+      .select()
   }
 
   const handleAddEventInBD=async (
     newEventTitle: string,
     startD: Date,
-    endD: Date,
+    endD: Date
   ) => {
-
     const { data, error }=await superSupabase
-      .from('events')
-      .insert(
-        [{
+      .from("events")
+      .insert([
+        {
           title: newEventTitle,
           start: startD.toDateString(),
           end: endD.toDateString()
-        }]
-      )
+        }
+      ])
       .select()
-    console.log('DATA INSERTADA', data)
-
-
   }
 
   const handleCloseDialog=() => {
@@ -129,23 +131,11 @@ const Calendar: React.FC=() => {
         start: selectedDate.start,
         end: selectedDate.end,
         allDay: isAllDay,
-        servicio_id: '00-00-00',
+        servicio_id: "00-00-00",
         editable: true,
-        backgroundColor: 'yellow',
-        textColor: 'black'
+        backgroundColor: "yellow",
+        textColor: "black"
       }
-
-      // const newEventToBd={
-      //   id: newId,
-      //   title: newEventTitle,
-      //   start: selectedDate.start.toLocaleString(),
-      //   end: selectedDate.end.toLocaleString(),
-      //   allDay: isAllDay,
-      //   servicio_id: '00-00-00',
-      //   editable: true,
-      //   backgroundColor: 'yellow',
-      //   textColor: 'black'
-      // }
 
       const startD=selectedDate.start
       const endD=selectedDate.end
@@ -158,14 +148,14 @@ const Calendar: React.FC=() => {
 
   return (
     <div>
-      <div className="flex w-full px-10 justify-start items-start gap-8">
-        <div className="w-3/12">
-          <div className="py-10 text-xl font-extrabold px-7">
+      <div className='flex w-full px-10 justify-start items-start gap-8'>
+        <div className='w-3/12'>
+          <div className='py-10 text-xl font-extrabold px-7'>
             Calendar Events
           </div>
-          <ul className="space-y-4">
+          <ul className='space-y-4'>
             {currentEvents.length<=0&&(
-              <div className="italic text-center text-gray-400">
+              <div className='italic text-center text-gray-400'>
                 No Events Present
               </div>
             )}
@@ -173,34 +163,37 @@ const Calendar: React.FC=() => {
             {currentEvents.length>0&&
               currentEvents.map((event: EventApi) => (
                 <li
-                  className="border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs"
+                  className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs'
                   key={uuidv4()}
                 >
                   {event.title}
                   <br />
-                  <label className="text-slate-950">
+                  <label className='text-slate-950'>
                     {formatDate(event.start!, {
                       year: "numeric",
                       month: "short",
-                      day: "numeric",
+                      day: "numeric"
                     })}{" "}
                     {/* Format event start date */}
                   </label>
+                  <Link href={`/protected/servicios/servicio/${event.id}`}>
+                    Enviar
+                  </Link>
                 </li>
               ))}
           </ul>
         </div>
 
-        <div className="w-9/12 mt-8">
+        <div className='w-9/12 mt-8'>
           <FullCalendar
             height={"85vh"}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // Initialize calendar with required plugins.
             headerToolbar={{
               left: "prev,next today",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
             }} // Set header toolbar options.
-            initialView="dayGridMonth" // Initial view mode of the calendar.
+            initialView='dayGridMonth' // Initial view mode of the calendar.
             editable={true} // Allow events to be edited.
             selectable={true} // Allow dates to be selectable.
             selectMirror={true} // Mirror selections visually.
@@ -215,6 +208,7 @@ const Calendar: React.FC=() => {
             // } // Initial events loaded from local storage.
 
             events={newCurrentEvents as DataFullCalenda}
+            eventChange={(arg: EventChangeArg) => updateEvent(arg)}
           />
         </div>
       </div>
@@ -225,18 +219,18 @@ const Calendar: React.FC=() => {
           <DialogHeader>
             <DialogTitle>Add New Event Details</DialogTitle>
           </DialogHeader>
-          <form className="space-x-5 mb-4" onSubmit={handleAddEvent}>
+          <form className='space-x-5 mb-4' onSubmit={handleAddEvent}>
             <input
-              type="text"
-              placeholder="Event Title"
+              type='text'
+              placeholder='Event Title'
               value={newEventTitle}
               onChange={(e) => setNewEventTitle(e.target.value)} // Update new event title as the user types.
               required
-              className="border border-gray-200 p-3 rounded-md text-lg"
+              className='border border-gray-200 p-3 rounded-md text-lg'
             />
             <button
-              className="bg-green-500 text-white p-3 mt-5 rounded-md"
-              type="submit"
+              className='bg-green-500 text-white p-3 mt-5 rounded-md'
+              type='submit'
             >
               Add
             </button>{" "}
