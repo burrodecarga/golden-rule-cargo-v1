@@ -50,6 +50,9 @@ const Calendar: React.FC=() => {
     sound: true,
   })
 
+  const addDetails=(id: string) => {
+
+  }
   const getEventos=async () => {
     const { data }=await superSupabase.from("events").select("*").neq('position', 0)
     if (!data) {
@@ -285,9 +288,9 @@ const Calendar: React.FC=() => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Event Details</DialogTitle>
-            <div className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs'>
+            <div className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs space-y-6'>
 
-              <label htmlFor="">{event&&event.event.title}</label>
+              <label>{event&&event.event.title}</label>
               <br />
               <label className='text-slate-950'>
                 {formatDate(event?.event.start!, {
@@ -297,7 +300,9 @@ const Calendar: React.FC=() => {
                 })}{" "}
                 {/* Format event start date */}
               </label>
-              <button onClick={() => deleteEvent(event?.event.id!)}>eliminar</button>
+              <br />
+              <button onClick={() => deleteEvent(event?.event.id!)} className="p-4 py-2 bg-red-500 text-white rounded mr-4">delete</button>
+              <button onClick={() => addDetails(event?.event.id!)} className="p-4 py-2 bg-green-500 text-white rounded">add details</button>
             </div>
           </DialogHeader>
 
