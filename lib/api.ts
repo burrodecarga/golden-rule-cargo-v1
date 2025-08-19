@@ -24,6 +24,29 @@ servicio_id,
     return events
 }
 
+export const allNoPayEvents=async () => {
+    const supabase=await createClient()
+    let { data: events, error }=await supabase.from("events").select(
+        `id,
+servicio_id,
+            title,
+            url,
+            start,
+            end,
+            editable,
+            backgroundColor,
+            textColor`
+    ).neq('position', 0)
+
+
+    if (error) {
+        console.log(error)
+    }
+
+    return events
+}
+
+
 export type FetchEventsQuery=QueryData<typeof allEvents>
 export type FetchEvents=Awaited<ReturnType<typeof allEvents>>
 export type DBEvents=Database["public"]["Tables"]["events"]["Row"]

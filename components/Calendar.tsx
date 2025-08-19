@@ -23,6 +23,8 @@ import { v4 as uuidv4 } from "uuid"
 import { FetchEvents } from "@/lib/api"
 import { DataFullCalenda, Evento } from "@/types/util_types"
 import Link from "next/link"
+import { showToast } from "nextjs-toast-notify"
+
 
 const Calendar: React.FC=() => {
   const [currentEvents, setCurrentEvents]=useState<EventApi[]>([])
@@ -30,21 +32,36 @@ const Calendar: React.FC=() => {
     FetchEvents|Evento|null
   >()
   const [isDialogOpen, setIsDialogOpen]=useState<boolean>(false)
+  const [isDialogEventOpen, setIsDialogEventOpen]=useState<boolean>(false)
   const [newEventTitle, setNewEventTitle]=useState<string>("")
+  const [newEventPrice, setNewEventPrice]=useState<string>("")
   const [selectedDate, setSelectedDate]=useState<DateSelectArg|null>(null)
+  const [event, setEvent]=useState<EventClickArg>()
+  const [loading, setLoading]=useState(false)
+  const [cambio, setCambio]=useState(false)
+
+
+  const showMsg=() => showToast.success("¡La operación se realizó con éxito!", {
+    duration: 4000,
+    progress: true,
+    position: "top-right",
+    transition: "bounceIn",
+    icon: '',
+    sound: true,
+  })
 
   const getEventos=async () => {
-    const { data }=await superSupabase.from("events").select("*")
+    const { data }=await superSupabase.from("events").select("*").neq('position', 0)
     if (!data) {
       //setNewCurrentEvents()
     }
-    console.log("EVENTOS", data)
+    //console.log("EVENTOS", data)
     setNewCurrentEvents(data)
   }
 
   useEffect(() => {
     getEventos()
-  }, [])
+  }, [cambio])
 
   useEffect(() => {
     // Load events from local storage when the component mounts
@@ -55,7 +72,7 @@ const Calendar: React.FC=() => {
         setCurrentEvents(JSON.parse(savedEvents))
       }
       localStorage.removeItem("events")
-      console.log("BORRANDO EVENTOS")
+      //console.log("BORRANDO EVENTOS")
     }
   }, [])
 
@@ -71,24 +88,40 @@ const Calendar: React.FC=() => {
     setIsDialogOpen(true)
   }
 
+  const deleteEvent=async (id: string) => {
+    setLoading(true)
+    try {
+      const { data, error }=await superSupabase
+        .from("events")
+        .delete()
+        .eq("id", id)
+        .select()
+
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+
+    setIsDialogEventOpen(false)
+    setCambio(!cambio)
+    showMsg()
+
+  }
+
+
   const handleEventClick=(selected: EventClickArg) => {
     const ruta=`/protected/servicios/servicio/?${selected.event.id}`
-    //Prompt user for confirmation before deleting an event
-    if (
-      window.confirm(
-        `Are you sure you want to delete the event "${selected.event.title}"?`
-      )
-    ) {
-      window.location.href=ruta
-      //selected.event.remove()
-    }
+    setIsDialogEventOpen(true)
+    setEvent(selected)
+
+
   }
 
   const updateEvent=async (arg: EventChangeArg) => {
-
     const startD=arg.event.start
     const endD=arg.event.end
-    console.log('START STR', startD)
+    // console.log('START STR', startD)
     const { data, error }=await superSupabase
       .from("events")
       .update({ start: startD?.toDateString(), end: endD?.toDateString() })
@@ -96,6 +129,7 @@ const Calendar: React.FC=() => {
       .select()
   }
 
+  const fullEvent=newEventTitle+', '+newEventPrice
   const handleAddEventInBD=async (
     newEventTitle: string,
     startD: Date,
@@ -105,7 +139,7 @@ const Calendar: React.FC=() => {
       .from("events")
       .insert([
         {
-          title: newEventTitle,
+          title: fullEvent,
           start: startD.toDateString(),
           end: endD.toDateString()
         }
@@ -116,6 +150,7 @@ const Calendar: React.FC=() => {
   const handleCloseDialog=() => {
     setIsDialogOpen(false)
     setNewEventTitle("")
+    setNewEventPrice("")
   }
 
   const handleAddEvent=(e: React.FormEvent) => {
@@ -127,7 +162,7 @@ const Calendar: React.FC=() => {
       const isAllDay=selectedDate.allDay
       const newEvent={
         id: newId,
-        title: newEventTitle,
+        title: newEventTitle+', '+newEventPrice,
         start: selectedDate.start,
         end: selectedDate.end,
         allDay: isAllDay,
@@ -148,8 +183,8 @@ const Calendar: React.FC=() => {
 
   return (
     <div>
-      <div className='flex w-full px-10 justify-start items-start gap-8'>
-        <div className='w-3/12'>
+      <div className='flex flex-col-reverse w-full md:flex-row px-10 justify-start items-start gap-8'>
+        <div className='w-full md:w-3/12'>
           <div className='py-10 text-xl font-extrabold px-7'>
             Calendar Events
           </div>
@@ -176,7 +211,7 @@ const Calendar: React.FC=() => {
                     })}{" "}
                     {/* Format event start date */}
                   </label>
-                  <Link href={`/protected/servicios/servicio/${event.id}`}>
+                  <Link href={`/protected/servicios/servicio/?${event.id}`}>
                     Enviar
                   </Link>
                 </li>
@@ -184,7 +219,7 @@ const Calendar: React.FC=() => {
           </ul>
         </div>
 
-        <div className='w-9/12 mt-8'>
+        <div className='w-full md:w-9/12 mt-8 text-sm' >
           <FullCalendar
             height={"85vh"}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // Initialize calendar with required plugins.
@@ -201,14 +236,9 @@ const Calendar: React.FC=() => {
             select={handleDateClick} // Handle date selection to create new events.
             eventClick={handleEventClick} // Handle clicking on events (e.g., to delete them).
             eventsSet={(events) => setCurrentEvents(events)} // Update state with current events whenever they change.
-            // initialEvents={
-            //   typeof window!=="undefined"
-            //     ? JSON.parse(localStorage.getItem("events")||"[]")
-            //     :[]
-            // } // Initial events loaded from local storage.
-
             events={newCurrentEvents as DataFullCalenda}
             eventChange={(arg: EventChangeArg) => updateEvent(arg)}
+            displayEventTime={false}
           />
         </div>
       </div>
@@ -219,23 +249,58 @@ const Calendar: React.FC=() => {
           <DialogHeader>
             <DialogTitle>Add New Event Details</DialogTitle>
           </DialogHeader>
-          <form className='space-x-5 mb-4' onSubmit={handleAddEvent}>
+          <form className='mb-4 space-y-4' onSubmit={handleAddEvent}>
+
             <input
               type='text'
               placeholder='Event Title'
               value={newEventTitle}
               onChange={(e) => setNewEventTitle(e.target.value)} // Update new event title as the user types.
               required
-              className='border border-gray-200 p-3 rounded-md text-lg'
+              className='border border-gray-200 p-3 rounded-md text-lg w-full'
             />
+
+            <input
+              type='text'
+              placeholder='Event price'
+              value={newEventPrice}
+              onChange={(e) => setNewEventPrice(e.target.value)} // Update new event title as the user types.
+              required
+              className='border border-gray-200 p-3 rounded-md text-lg w-full'
+            />
+            <br />
             <button
-              className='bg-green-500 text-white p-3 mt-5 rounded-md'
+              className='bg-green-500 text-white p-3 mt-5 rounded-md w-full'
               type='submit'
             >
               Add
-            </button>{" "}
-            {/* Button to submit new event */}
+            </button>
+
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog for vew event */}
+      <Dialog open={isDialogEventOpen} onOpenChange={setIsDialogEventOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Event Details</DialogTitle>
+            <div className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs'>
+
+              <label htmlFor="">{event&&event.event.title}</label>
+              <br />
+              <label className='text-slate-950'>
+                {formatDate(event?.event.start!, {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric"
+                })}{" "}
+                {/* Format event start date */}
+              </label>
+              <button onClick={() => deleteEvent(event?.event.id!)}>eliminar</button>
+            </div>
+          </DialogHeader>
+
         </DialogContent>
       </Dialog>
     </div>
