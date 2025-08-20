@@ -21,6 +21,9 @@ import {
 import { allServiciosNoPay, FetchServiciosQuery } from "@/lib/super_api"
 import { superSupabase } from "@/lib/supabase/oterClient"
 import { showToast } from "nextjs-toast-notify"
+import { URL_FOTO_DEF } from "@/const/Images"
+import { semanaDeAno } from "@/const/helper"
+import { ServicioNoId } from "@/types/util_types"
 
 
 const Calendar: React.FC=() => {
@@ -32,10 +35,58 @@ const Calendar: React.FC=() => {
   const [newEventTitle, setNewEventTitle]=useState<string>("")
   const [newEventPrice, setNewEventPrice]=useState<string>("")
   const [arg, setArg]=useState<EventClickArg>()
-
-
+  const [loading, setLoading]=useState(false)
   const [selectedDate, setSelectedDate]=useState<DateSelectArg|null>(null)
   const [cambio, setCambio]=useState(false)
+
+  const hoy=new Date()
+  const numSemana=semanaDeAno()
+
+  const [form, setForm]=useState<ServicioNoId>({
+    activo: 0,
+    bol: URL_FOTO_DEF,
+    broker: "",
+    carga: "",
+    chofer: "",
+    chofer_id: "",
+    despachador: "pedro almendarez",
+    destino: "sprinfield los simpson ",
+    estatus_pago: "no cobrado",
+    estatus_servicio: "en proceso",
+    fecha_carga: "",
+    fecha_entrega: "",
+    forma_de_pago: "",
+    gasto_estimado: 1200,
+    info_pago: "",
+    millas: 300,
+    num_descargas: 1,
+    observaciones: "sólo datos de carga",
+    orden: "56743",
+    origen: "texas",
+    peso: 750,
+    plataforma: "tql",
+    pod: URL_FOTO_DEF,
+    precio_de_servicio: 12000,
+    precio_mano_de_obra: 3000,
+    rc: URL_FOTO_DEF,
+    ruta: "tx-sp",
+    tipo_de_carga: "vehículo",
+    vehiculo: "",
+    vehiculo_id: "",
+    dia: hoy.getDate(),
+    ano: hoy.getFullYear(),
+    dia_de_semana: hoy.getDay(),
+    semana: numSemana
+  })
+
+  const handleChange=(name: string, text: string): void => {
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: text
+    }))
+  }
+
 
   const showMsg=() => showToast.success("¡La operación se realizó con éxito!", {
     duration: 4000,
@@ -145,7 +196,26 @@ const Calendar: React.FC=() => {
     }
   }
 
-  const deleteEvent=async (id: string) => { }
+  const deleteEvent=async (id: string) => {
+    setLoading(true)
+    try {
+      const { data, error }=await superSupabase
+        .from("servicios")
+        .delete()
+        .eq("id", id)
+        .select()
+
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+
+    setIsDialogEventOpen(false)
+    setCambio(!cambio)
+    showMsg()
+
+  }
   const addDetails=async (id: string) => { }
 
 

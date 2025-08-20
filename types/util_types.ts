@@ -94,3 +94,41 @@ export interface TypeServicio {
     vehiculo?: string|null
     vehiculo_id?: string|null
 }
+
+export interface ServicioNoId {
+    activo: number
+    bol: string
+    broker: string
+    carga: string
+    chofer: string
+    chofer_id: string
+    despachador: string
+    destino: string
+    estatus_pago: string
+    estatus_servicio: string
+    fecha_carga: string
+    fecha_entrega: string
+    forma_de_pago: string
+    gasto_estimado: number
+    info_pago: string
+    millas: number
+    num_descargas: number
+    observaciones: string
+    orden: string
+    origen: string
+    peso: number
+    plataforma: string
+    pod: string
+    precio_de_servicio: number
+    precio_mano_de_obra: number
+    rc: string
+    ruta: string
+    tipo_de_carga: string
+    vehiculo: string
+    vehiculo_id: string
+    ano: number
+    dia: number
+    dia_de_semana: number
+    semana: number
+}
+
