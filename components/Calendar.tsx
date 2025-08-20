@@ -1,12 +1,12 @@
 "use client"
 
-import React, { useState, useEffect, use } from "react"
+import React, { useState, useEffect } from "react"
 import {
   formatDate,
   DateSelectArg,
   EventClickArg,
   EventApi,
-  EventChangeArg
+  EventChangeArg,
 } from "@fullcalendar/core"
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
@@ -16,30 +16,26 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog"
+import { allServiciosNoPay, FetchServiciosQuery } from "@/lib/super_api"
 import { superSupabase } from "@/lib/supabase/oterClient"
-import { v4 as uuidv4 } from "uuid"
-import { crearServicio, FetchEvents, FetchServicios, findServicio, findServicioInEvent, Servicio } from "@/lib/api"
-import { DataFullCalenda, Evento, TypeNewEvent, TypeServicio } from "@/types/util_types"
 import { showToast } from "nextjs-toast-notify"
-import { Tables } from "@/types/db_types"
 
 
 const Calendar: React.FC=() => {
   const [currentEvents, setCurrentEvents]=useState<EventApi[]>([])
-  const [newCurrentEvents, setNewCurrentEvents]=useState<
-    FetchEvents|Evento|null>()
+  const [newCurrentEvents, setNewCurrentEvents]=useState()
   const [isDialogOpen, setIsDialogOpen]=useState<boolean>(false)
   const [isDialogEventOpen, setIsDialogEventOpen]=useState<boolean>(false)
+
   const [newEventTitle, setNewEventTitle]=useState<string>("")
   const [newEventPrice, setNewEventPrice]=useState<string>("")
-  const [selectedDate, setSelectedDate]=useState<DateSelectArg|null>(null)
-  const [event, setEvent]=useState<EventClickArg>()
-  const [loading, setLoading]=useState(false)
-  const [cambio, setCambio]=useState(false)
-  const [servicio, setServicio]=useState<TypeServicio>()
+  const [arg, setArg]=useState<EventClickArg>()
 
+
+  const [selectedDate, setSelectedDate]=useState<DateSelectArg|null>(null)
+  const [cambio, setCambio]=useState(false)
 
   const showMsg=() => showToast.success("¡La operación se realizó con éxito!", {
     duration: 4000,
@@ -51,49 +47,36 @@ const Calendar: React.FC=() => {
   })
 
 
-
-
-  const addDetails=async (id: string) => {
-    const existeEvent=await findServicioInEvent(id)
-    if (!existeEvent) {
-      const result=await crearServicio(id, 'servicio sin datos')
-      setServicio(result)
-    } else {
-      const result=await findServicio(id)
-      setServicio(result as TypeServicio)
-    }
-
-
-
-    //const ruta=`/protected/servicios/servicio/?${id}`
-    //window.location.href=ruta
-
+  const getNewCurrentsEvents=async () => {
+    const result=await allServiciosNoPay()
+    setNewCurrentEvents(result as FetchServiciosQuery)
   }
-  const getEventos=async () => {
-    const { data }=await superSupabase.from("events").select("*").neq('position', 0).order("start", {
-      ascending: true,
-    })
-    if (!data) {
-      //setNewCurrentEvents()
-    }
-    //console.log("EVENTOS", data)
-    setNewCurrentEvents(data as FetchEvents)
+
+  const updateEvent=async (arg: EventChangeArg) => {
+    const startD=arg.event.start
+    const endD=arg.event.end
+    // console.log('START STR', startD)
+    const { data, error }=await superSupabase
+      .from("servicios")
+      .update({ start: startD?.toDateString(), end: endD?.toDateString() })
+      .eq("id", arg.event.id)
+      .select()
+
+    setCambio(!cambio)
   }
+
 
   useEffect(() => {
-    getEventos()
+    getNewCurrentsEvents()
   }, [cambio])
 
   useEffect(() => {
     // Load events from local storage when the component mounts
     if (typeof window!=="undefined") {
-      localStorage.removeItem("events")
       const savedEvents=localStorage.getItem("events")
       if (savedEvents) {
         setCurrentEvents(JSON.parse(savedEvents))
       }
-      localStorage.removeItem("events")
-      //console.log("BORRANDO EVENTOS")
     }
   }, [])
 
@@ -109,65 +92,10 @@ const Calendar: React.FC=() => {
     setIsDialogOpen(true)
   }
 
-  const deleteEvent=async (id: string) => {
-    setLoading(true)
-    try {
-      const { data, error }=await superSupabase
-        .from("events")
-        .delete()
-        .eq("id", id)
-        .select()
-
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setLoading(false)
-    }
-
-    setIsDialogEventOpen(false)
-    setCambio(!cambio)
-    showMsg()
-
-  }
-
-
   const handleEventClick=(selected: EventClickArg) => {
     const ruta=`/protected/servicios/servicio/?${selected.event.id}`
     setIsDialogEventOpen(true)
-    setEvent(selected)
-
-
-  }
-
-  const updateEvent=async (arg: EventChangeArg) => {
-    const startD=arg.event.start
-    const endD=arg.event.end
-    // console.log('START STR', startD)
-    const { data, error }=await superSupabase
-      .from("events")
-      .update({ start: startD?.toDateString(), end: endD?.toDateString() })
-      .eq("id", arg.event.id)
-      .select()
-  }
-
-  const fullEvent=newEventTitle+', '+newEventPrice
-  const handleAddEventInBD=async (
-    newEventTitle: string,
-    startD: Date,
-    endD: Date
-  ) => {
-    const { data, error }=await superSupabase
-      .from("events")
-      .insert([
-        {
-          title: fullEvent,
-          start: startD.toDateString(),
-          end: endD.toDateString()
-        }
-      ])
-      .select()
-
-    setCambio(!cambio)
+    setArg(selected)
   }
 
   const handleCloseDialog=() => {
@@ -176,45 +104,61 @@ const Calendar: React.FC=() => {
     setNewEventPrice("")
   }
 
+  const handleAddEventInBD=async (
+    newEventTitle: string,
+    newEventPrice: string,
+    startD: Date,
+    endD: Date
+  ) => {
+    const fullEvent=newEventTitle+', '+newEventPrice
+    const { data, error }=await superSupabase
+      .from("servicios")
+      .insert([
+        {
+          title: fullEvent,
+          start: startD.toDateString(),
+          end: endD.toDateString()
+        }
+      ])
+      .select()
+    setCambio(!cambio)
+  }
+
   const handleAddEvent=(e: React.FormEvent) => {
     e.preventDefault()
     if (newEventTitle&&selectedDate) {
       const calendarApi=selectedDate.view.calendar // Get the calendar API instance.
       calendarApi.unselect() // Unselect the date range.
-      const newId=`${selectedDate.start.toISOString()}-${newEventTitle}`
-      const isAllDay=selectedDate.allDay
-      const newEvent={
-        id: newId,
-        title: newEventTitle+', '+newEventPrice,
-        start: selectedDate.start,
-        end: selectedDate.end,
-        allDay: isAllDay,
-        servicio_id: "00-00-00",
-        editable: true,
-        backgroundColor: "yellow",
-        textColor: "black"
-      }
 
-      const startD=selectedDate.start
-      const endD=selectedDate.end
-      calendarApi.addEvent(newEvent)
-      // handleAddEventInBD(newEventTitle, startD, endD)
-      handleAddEventInBD(newEventTitle, startD, endD)
+      // const newEvent={
+      //   id: `${selectedDate.start.toISOString()}-${newEventTitle}`,
+      //   title: newEventTitle,
+      //   start: selectedDate.start,
+      //   end: selectedDate.end,
+      //   allDay: selectedDate.allDay,
+      // }
+      // calendarApi.addEvent(newEvent)
+
+      handleAddEventInBD(newEventTitle, newEventPrice, selectedDate.start, selectedDate.end)
+
       handleCloseDialog()
-      showMsg()
     }
   }
 
+  const deleteEvent=async (id: string) => { }
+  const addDetails=async (id: string) => { }
+
+
   return (
     <div>
-      <div className='flex flex-col-reverse w-full md:flex-row px-10 justify-start items-start gap-8'>
-        <div className='w-full md:w-3/12'>
-          <div className='py-10 text-xl font-extrabold px-7'>
+      <div className="flex w-full px-10 justify-start items-start gap-8">
+        <div className="w-3/12">
+          <div className="py-10 text-2xl font-extrabold px-7">
             Calendar Events
           </div>
-          <ul className='space-y-4'>
+          <ul className="space-y-4">
             {currentEvents.length<=0&&(
-              <div className='italic text-center text-gray-400'>
+              <div className="italic text-center text-gray-400">
                 No Events Present
               </div>
             )}
@@ -222,17 +166,16 @@ const Calendar: React.FC=() => {
             {currentEvents.length>0&&
               currentEvents.map((event: EventApi) => (
                 <li
-                  className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs'
-                  key={uuidv4()}
+                  className="border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800"
+                  key={event.id}
                 >
-                  {JSON.stringify(event, null, 2)}
                   {event.title}
                   <br />
-                  <label className='text-slate-950'>
+                  <label className="text-slate-950">
                     {formatDate(event.start!, {
                       year: "numeric",
                       month: "short",
-                      day: "numeric"
+                      day: "numeric",
                     })}{" "}
                     {/* Format event start date */}
                   </label>
@@ -241,16 +184,16 @@ const Calendar: React.FC=() => {
           </ul>
         </div>
 
-        <div className='w-full md:w-9/12 mt-8 text-sm' >
+        <div className="w-9/12 mt-8">
           <FullCalendar
             height={"85vh"}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // Initialize calendar with required plugins.
             headerToolbar={{
               left: "prev,next today",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
+              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
             }} // Set header toolbar options.
-            initialView='dayGridMonth' // Initial view mode of the calendar.
+            initialView="dayGridMonth" // Initial view mode of the calendar.
             editable={true} // Allow events to be edited.
             selectable={true} // Allow dates to be selectable.
             selectMirror={true} // Mirror selections visually.
@@ -258,7 +201,9 @@ const Calendar: React.FC=() => {
             select={handleDateClick} // Handle date selection to create new events.
             eventClick={handleEventClick} // Handle clicking on events (e.g., to delete them).
             eventsSet={(events) => setCurrentEvents(events)} // Update state with current events whenever they change.
-            events={newCurrentEvents as DataFullCalenda}
+
+            // Initial events loaded from local storage.
+            events={newCurrentEvents}
             eventChange={(arg: EventChangeArg) => updateEvent(arg)}
             displayEventTime={false}
           />
@@ -297,7 +242,6 @@ const Calendar: React.FC=() => {
             >
               Add
             </button>
-
           </form>
         </DialogContent>
       </Dialog>
@@ -308,11 +252,11 @@ const Calendar: React.FC=() => {
           <DialogHeader>
             <DialogTitle>Event Details</DialogTitle>
             <div className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs space-y-6'>
-              <label>{event&&event.event.title}</label>
+              <label>{arg?.event.title}</label>
 
               <br />
               <label className='text-slate-950'>
-                {formatDate(event?.event.start!, {
+                {formatDate(arg?.event.start!, {
                   year: "numeric",
                   month: "short",
                   day: "numeric"
@@ -320,8 +264,8 @@ const Calendar: React.FC=() => {
                 {/* Format event start date */}
               </label>
               <br />
-              <button onClick={() => deleteEvent(event?.event.id!)} className="p-4 py-2 bg-red-500 text-white rounded mr-4">delete</button>
-              <button onClick={() => addDetails(event?.event.id!)} className="p-4 py-2 bg-green-500 text-white rounded">add details</button>
+              <button onClick={() => deleteEvent(arg?.event.id!)} className="p-4 py-2 bg-red-500 text-white rounded mr-4">delete</button>
+              <button onClick={() => addDetails(arg?.event.id!)} className="p-4 py-2 bg-green-500 text-white rounded">add details</button>
             </div>
           </DialogHeader>
 
@@ -332,5 +276,3 @@ const Calendar: React.FC=() => {
 }
 
 export default Calendar // Export the Calendar component for use in other parts of the application.
-
-

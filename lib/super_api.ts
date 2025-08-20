@@ -1,6 +1,4 @@
 import { QueryData } from "@supabase/supabase-js"
-import { createClient } from "./supabase/server"
-import { TypeNewEvent } from "@/types/util_types"
 import { Database } from "@/types/db_types"
 import { superSupabase } from "./supabase/oterClient"
 
@@ -73,14 +71,14 @@ import { superSupabase } from "./supabase/oterClient"
 // }
 
 export const allServicios=async () => {
-    const supabase=await createClient()
-    const { data }=await supabase.from("servicios").select("*")
+
+    const { data }=await superSupabase.from("servicios").select("*")
     //console.log('SEVER', data)
     return data
 }
 
 export const allServiciosNoPay=async () => {
-    const supabase=await createClient()
+
     const { data, error }=await superSupabase.from("servicios").select("*").neq('position', 0).order("start", {
         ascending: true,
     })

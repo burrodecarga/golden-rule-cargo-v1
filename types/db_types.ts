@@ -287,7 +287,9 @@ export type Database = {
       servicios: {
         Row: {
           activo: number | null
+          allDay: boolean | null
           ano: number | null
+          backgroundColor: string | null
           bol: string | null
           broker: string | null
           carga: string | null
@@ -298,6 +300,8 @@ export type Database = {
           destino: string | null
           dia: number | null
           dia_de_semana: number | null
+          editable: boolean | null
+          end: string | null
           estatus_pago: string | null
           estatus_servicio: string | null
           fecha_carga: string | null
@@ -314,18 +318,24 @@ export type Database = {
           peso: number | null
           plataforma: string | null
           pod: string | null
+          position: number | null
           precio_de_servicio: number | null
           precio_mano_de_obra: number | null
           rc: string | null
           ruta: string | null
           semana: number | null
+          start: string | null
+          textColor: string | null
           tipo_de_carga: string | null
+          title: string | null
           vehiculo: string | null
           vehiculo_id: string | null
         }
         Insert: {
           activo?: number | null
+          allDay?: boolean | null
           ano?: number | null
+          backgroundColor?: string | null
           bol?: string | null
           broker?: string | null
           carga?: string | null
@@ -336,6 +346,8 @@ export type Database = {
           destino?: string | null
           dia?: number | null
           dia_de_semana?: number | null
+          editable?: boolean | null
+          end?: string | null
           estatus_pago?: string | null
           estatus_servicio?: string | null
           fecha_carga?: string | null
@@ -352,18 +364,24 @@ export type Database = {
           peso?: number | null
           plataforma?: string | null
           pod?: string | null
+          position?: number | null
           precio_de_servicio?: number | null
           precio_mano_de_obra?: number | null
           rc?: string | null
           ruta?: string | null
           semana?: number | null
+          start?: string | null
+          textColor?: string | null
           tipo_de_carga?: string | null
+          title?: string | null
           vehiculo?: string | null
           vehiculo_id?: string | null
         }
         Update: {
           activo?: number | null
+          allDay?: boolean | null
           ano?: number | null
+          backgroundColor?: string | null
           bol?: string | null
           broker?: string | null
           carga?: string | null
@@ -374,6 +392,8 @@ export type Database = {
           destino?: string | null
           dia?: number | null
           dia_de_semana?: number | null
+          editable?: boolean | null
+          end?: string | null
           estatus_pago?: string | null
           estatus_servicio?: string | null
           fecha_carga?: string | null
@@ -390,12 +410,16 @@ export type Database = {
           peso?: number | null
           plataforma?: string | null
           pod?: string | null
+          position?: number | null
           precio_de_servicio?: number | null
           precio_mano_de_obra?: number | null
           rc?: string | null
           ruta?: string | null
           semana?: number | null
+          start?: string | null
+          textColor?: string | null
           tipo_de_carga?: string | null
+          title?: string | null
           vehiculo?: string | null
           vehiculo_id?: string | null
         }
