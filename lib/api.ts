@@ -1,76 +1,7 @@
 import { QueryData } from "@supabase/supabase-js"
 import { createClient } from "./supabase/server"
-import { TypeNewEvent } from "@/types/util_types"
 import { Database } from "@/types/db_types"
 import { superSupabase } from "./supabase/oterClient"
-
-// export const allEvents=async () => {
-//     const supabase=await createClient()
-//     let { data: events, error }=await supabase.from("events").select(
-//         `id,
-// servicio_id,
-//             title,
-//             url,
-//             start,
-//             end,
-//             editable,
-//             backgroundColor,
-//             textColor`
-//     )
-
-//     if (error) {
-//         console.log(error)
-//     }
-
-//     return events
-// }
-
-// export const allNoPayEvents=async () => {
-//     const supabase=await createClient()
-//     let { data: events, error }=await supabase.from("events").select(
-//         `id,
-// servicio_id,
-//             title,
-//             url,
-//             start,
-//             end,
-//             editable,
-//             backgroundColor,
-//             textColor`
-//     ).neq('position', 0)
-
-
-//     if (error) {
-//         console.log(error)
-//     }
-
-//     return events
-// }
-
-
-// export type FetchEventsQuery=QueryData<typeof allEvents>
-// export type FetchEvents=Awaited<ReturnType<typeof allEvents>>
-// export type DBEvents=Database["public"]["Tables"]["events"]["Row"]
-// export type Event=[number]
-
-// export const addEvent=async (evento: TypeNewEvent) => {
-//     const supabase=await createClient()
-//     const { data, error }=await supabase
-//         .from("events")
-//         .insert([
-//             {
-//                 servicio_id: evento.servicio_id,
-//                 title: evento.title,
-//                 url: evento.url,
-//                 start: evento.start,
-//                 end: evento.end,
-//                 editable: evento.editable,
-//                 backgroundColor: evento.backgroundColor,
-//                 textColor: evento.textColor
-//             }
-//         ])
-//         .select()
-// }
 
 export const allServicios=async () => {
     const supabase=await createClient()
@@ -81,32 +12,30 @@ export const allServicios=async () => {
 
 export const allServiciosNoPay=async () => {
     const supabase=await createClient()
-    const { data, error }=await superSupabase.from("servicios").select("*").neq('position', 0).order("start", {
-        ascending: true,
-    })
-
+    const { data, error }=await superSupabase
+        .from("servicios")
+        .select("*")
+        .neq("position", 0)
+        .order("start", {
+            ascending: true
+        })
     if (error) {
         console.log(error.message)
         return []
     } else {
         return data
     }
-
 }
-
 
 export type FetchServiciosQuery=QueryData<typeof allServicios>
 export type FetchServicios=Awaited<ReturnType<typeof allServicios>>
 export type DBServicio=Database["public"]["Tables"]["servicios"]["Row"]
 export type Servicio=[number]
 
-
 export async function crearServicio(id: string, carga: string) {
     const { data, error }=await superSupabase
-        .from('servicios')
-        .insert([
-            { carga: carga },
-        ])
+        .from("servicios")
+        .insert([{ carga: carga }])
         .select()
     if (error) {
         console.log(error)
@@ -117,9 +46,9 @@ export async function crearServicio(id: string, carga: string) {
 
 export async function updateEvent(id: string, servicio_id: string) {
     const { data, error }=await superSupabase
-        .from('events')
+        .from("events")
         .update({ servicio_id: servicio_id })
-        .eq('id', id)
+        .eq("id", id)
         .select()
     if (error) {
         console.log(error)
@@ -129,27 +58,75 @@ export async function updateEvent(id: string, servicio_id: string) {
 
 export async function findServicioInEvent(id: string) {
     const { data, error }=await superSupabase
-        .from('events')
+        .from("events")
         .select("*")
-        .eq('servicio_id', id)
+        .eq("servicio_id", id)
 
     if (error) {
         console.log(error)
-
     }
     return data
 }
 
 export async function findServicio(id: string) {
     const { data, error }=await superSupabase
-        .from('servicios')
+        .from("servicios")
         .select("*")
-        .eq('id', id)
+        .eq("id", id)
 
     if (error) {
         console.log(error)
-
     }
     return data
 }
+
+
+export const fetchAllChoferes=async () => {
+    const { data, error }=await superSupabase
+        .from("profiles")
+        .select("*")
+        .eq('role', 'chofer')
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export type FetchChoferesQuery=QueryData<typeof fetchAllChoferes>
+export type FetchChoferes=Awaited<ReturnType<typeof fetchAllChoferes>>
+export type DBChofere=Database["public"]["Tables"]["profiles"]["Row"]
+export type Chofere=[number]
+
+export const fetchAllPlataformas=async () => {
+    const { data, error }=await superSupabase.from("plataformas").select('*')
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export type FetchPlataformasQuery=QueryData<typeof fetchAllPlataformas>
+export type FetchPlataformas=Awaited<ReturnType<typeof fetchAllPlataformas>>
+export type DBPlataforma=Database["public"]["Tables"]["plataformas"]["Row"]
+export type Plataforma=[number]
+
+export const fetchAllVehicles=async () => {
+    const { data, error }=await superSupabase.from("vehicles").select('*')
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export type FetchVehiclesQuery=QueryData<typeof fetchAllVehicles>
+export type FetchVehicles=Awaited<ReturnType<typeof fetchAllVehicles>>
+export type DBVehicles=Database["public"]["Tables"]["vehicles"]["Row"]
+export type Vehicles=[number]
+
 

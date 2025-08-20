@@ -24,6 +24,7 @@ import { showToast } from "nextjs-toast-notify"
 import { URL_FOTO_DEF } from "@/const/Images"
 import { semanaDeAno } from "@/const/helper"
 import { ServicioNoId } from "@/types/util_types"
+import { fetchAllChoferes, fetchAllPlataformas, fetchAllVehicles, FetchChoferes, FetchChoferesQuery, FetchPlataformas, FetchVehicles } from "@/lib/api"
 
 
 const Calendar: React.FC=() => {
@@ -38,6 +39,9 @@ const Calendar: React.FC=() => {
   const [loading, setLoading]=useState(false)
   const [selectedDate, setSelectedDate]=useState<DateSelectArg|null>(null)
   const [cambio, setCambio]=useState(false)
+  const [choferes, setChoferes]=useState<FetchChoferes>()
+  const [plataformas, setPlataformas]=useState<FetchPlataformas>()
+  const [vehiculos, setVehiculos]=useState<FetchVehicles>()
 
   const hoy=new Date()
   const numSemana=semanaDeAno()
@@ -79,6 +83,22 @@ const Calendar: React.FC=() => {
     semana: numSemana
   })
 
+  const getChoferes=async () => {
+    const resultado=await fetchAllChoferes()
+    setChoferes(resultado)
+  }
+
+  const getPlataformas=async () => {
+    const resultado=await fetchAllPlataformas()
+    setPlataformas(resultado)
+  }
+
+  const getVehiculos=async () => {
+    const resultado=await fetchAllVehicles()
+    setVehiculos(resultado)
+  }
+
+
   const handleChange=(name: string, text: string): void => {
 
     setForm((prev) => ({
@@ -115,6 +135,18 @@ const Calendar: React.FC=() => {
 
     setCambio(!cambio)
   }
+
+  useEffect(() => {
+    getChoferes()
+  }, [])
+
+  useEffect(() => {
+    getPlataformas()
+  }, [])
+
+  useEffect(() => {
+    getVehiculos()
+  }, [])
 
 
   useEffect(() => {
