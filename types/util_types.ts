@@ -56,4 +56,41 @@ export type Evento={
 
 export type DataFullCalenda=EventSourceInput
 
-
+export interface TypeServicio {
+    activo?: number|null
+    ano?: number|null
+    bol?: string|null
+    broker?: string|null
+    carga?: string|null
+    chofer?: string|null
+    chofer_id?: string|null
+    created_at?: string|null
+    despachador?: string|null
+    destino?: string|null
+    dia?: number|null
+    dia_de_semana?: number|null
+    estatus_pago?: string|null
+    estatus_servicio?: string|null
+    fecha_carga?: string|null
+    fecha_entrega?: string|null
+    forma_de_pago?: string|null
+    gasto_estimado?: number|null
+    id?: string|null
+    info_pago?: string|null
+    millas?: number|null
+    num_descargas?: number|null
+    observaciones?: string|null
+    orden?: string|null
+    origen?: string|null
+    peso?: number|null
+    plataforma?: string|null
+    pod?: string|null
+    precio_de_servicio?: number|null
+    precio_mano_de_obra?: number|null
+    rc?: string|null
+    ruta?: string|null
+    semana?: number|null
+    tipo_de_carga?: string|null
+    vehiculo?: string|null
+    vehiculo_id?: string|null
+}

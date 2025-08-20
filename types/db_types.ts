@@ -21,11 +21,11 @@ export type Database = {
           editable: boolean | null
           end: string | null
           id: string
+          position: number | null
           servicio_id: string | null
           start: string | null
           textColor: string | null
           title: string
-          url: string | null
         }
         Insert: {
           backgroundColor?: string | null
@@ -33,11 +33,11 @@ export type Database = {
           editable?: boolean | null
           end?: string | null
           id?: string
+          position?: number | null
           servicio_id?: string | null
           start?: string | null
           textColor?: string | null
           title?: string
-          url?: string | null
         }
         Update: {
           backgroundColor?: string | null
@@ -45,11 +45,11 @@ export type Database = {
           editable?: boolean | null
           end?: string | null
           id?: string
+          position?: number | null
           servicio_id?: string | null
           start?: string | null
           textColor?: string | null
           title?: string
-          url?: string | null
         }
         Relationships: []
       }

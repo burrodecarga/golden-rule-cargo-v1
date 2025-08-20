@@ -20,17 +20,16 @@ import {
 } from "@/components/ui/dialog"
 import { superSupabase } from "@/lib/supabase/oterClient"
 import { v4 as uuidv4 } from "uuid"
-import { FetchEvents } from "@/lib/api"
-import { DataFullCalenda, Evento } from "@/types/util_types"
-import Link from "next/link"
+import { crearServicio, FetchEvents, FetchServicios, findServicio, findServicioInEvent, Servicio } from "@/lib/api"
+import { DataFullCalenda, Evento, TypeNewEvent, TypeServicio } from "@/types/util_types"
 import { showToast } from "nextjs-toast-notify"
+import { Tables } from "@/types/db_types"
 
 
 const Calendar: React.FC=() => {
   const [currentEvents, setCurrentEvents]=useState<EventApi[]>([])
   const [newCurrentEvents, setNewCurrentEvents]=useState<
-    FetchEvents|Evento|null
-  >()
+    FetchEvents|Evento|null>()
   const [isDialogOpen, setIsDialogOpen]=useState<boolean>(false)
   const [isDialogEventOpen, setIsDialogEventOpen]=useState<boolean>(false)
   const [newEventTitle, setNewEventTitle]=useState<string>("")
@@ -39,6 +38,7 @@ const Calendar: React.FC=() => {
   const [event, setEvent]=useState<EventClickArg>()
   const [loading, setLoading]=useState(false)
   const [cambio, setCambio]=useState(false)
+  const [servicio, setServicio]=useState<TypeServicio>()
 
 
   const showMsg=() => showToast.success("¡La operación se realizó con éxito!", {
@@ -50,16 +50,34 @@ const Calendar: React.FC=() => {
     sound: true,
   })
 
-  const addDetails=(id: string) => {
+
+
+
+  const addDetails=async (id: string) => {
+    const existeEvent=await findServicioInEvent(id)
+    if (!existeEvent) {
+      const result=await crearServicio(id, 'servicio sin datos')
+      setServicio(result)
+    } else {
+      const result=await findServicio(id)
+      setServicio(result as TypeServicio)
+    }
+
+
+
+    //const ruta=`/protected/servicios/servicio/?${id}`
+    //window.location.href=ruta
 
   }
   const getEventos=async () => {
-    const { data }=await superSupabase.from("events").select("*").neq('position', 0)
+    const { data }=await superSupabase.from("events").select("*").neq('position', 0).order("start", {
+      ascending: true,
+    })
     if (!data) {
       //setNewCurrentEvents()
     }
     //console.log("EVENTOS", data)
-    setNewCurrentEvents(data)
+    setNewCurrentEvents(data as FetchEvents)
   }
 
   useEffect(() => {
@@ -148,6 +166,8 @@ const Calendar: React.FC=() => {
         }
       ])
       .select()
+
+    setCambio(!cambio)
   }
 
   const handleCloseDialog=() => {
@@ -181,6 +201,7 @@ const Calendar: React.FC=() => {
       // handleAddEventInBD(newEventTitle, startD, endD)
       handleAddEventInBD(newEventTitle, startD, endD)
       handleCloseDialog()
+      showMsg()
     }
   }
 
@@ -204,6 +225,7 @@ const Calendar: React.FC=() => {
                   className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs'
                   key={uuidv4()}
                 >
+                  {JSON.stringify(event, null, 2)}
                   {event.title}
                   <br />
                   <label className='text-slate-950'>
@@ -214,9 +236,6 @@ const Calendar: React.FC=() => {
                     })}{" "}
                     {/* Format event start date */}
                   </label>
-                  <Link href={`/protected/servicios/servicio/?${event.id}`}>
-                    Enviar
-                  </Link>
                 </li>
               ))}
           </ul>
@@ -289,8 +308,8 @@ const Calendar: React.FC=() => {
           <DialogHeader>
             <DialogTitle>Event Details</DialogTitle>
             <div className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs space-y-6'>
-
               <label>{event&&event.event.title}</label>
+
               <br />
               <label className='text-slate-950'>
                 {formatDate(event?.event.start!, {
@@ -313,3 +332,5 @@ const Calendar: React.FC=() => {
 }
 
 export default Calendar // Export the Calendar component for use in other parts of the application.
+
+
