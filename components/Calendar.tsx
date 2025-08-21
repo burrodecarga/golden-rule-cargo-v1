@@ -92,7 +92,6 @@ const Calendar: React.FC=() => {
     ano: hoy.getFullYear(),
     dia_de_semana: hoy.getDay(),
     semana: numSemana,
-    title: ''
   }
 
   const [form, setForm]=useState<ServicioNoId>(initialForm)
@@ -184,6 +183,17 @@ const Calendar: React.FC=() => {
   const handleDateClick=(selected: DateSelectArg) => {
     setSelectedDate(selected)
     setIsDialogOpen(true)
+  }
+
+  const handleChangeVehicle=(value: string) => {
+    const res=value.split('_')
+    handleChange("vehiculo", res[1])
+    handleChange("vehiculo_id", res[0])
+  }
+  const handleChangeChofer=(value: string) => {
+    const res=value.split('_')
+    handleChange("chofer", res[1])
+    handleChange("chofer_id", res[0])
   }
 
   const handleEventClick=(selected: EventClickArg) => {
@@ -525,21 +535,21 @@ const Calendar: React.FC=() => {
                 className='border border-gray-200 p-3 rounded-md text-lg w-full'
               />
 
-              <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
+              <select className='border border-gray-200 p-3 rounded-md text-sm w-full' value={form.plataforma} onChange={(e) => handleChange('plataforma', e.target.value)}>
                 {plataformas&&
                   plataformas.map((p) => (
-                    <option key={p.id}>{p.nombre}</option>
+                    <option value={p.nombre!} key={p.id}>{p.nombre}</option>
                   ))}
               </select>
             </div>
             <div className='flex flex-row gap-3'>
-              <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
+              <select className='border border-gray-200 p-3 rounded-md text-sm w-full' onChange={(e) => handleChangeChofer(e.target.value)}>
                 {choferes&&
-                  choferes.map((p) => <option key={p.id}>{p.username}</option>)}
+                  choferes.map((p) => <option value={p.id+'_'+p.username} key={p.id}>{p.username}</option>)}
               </select>
-              <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
+              <select className='border border-gray-200 p-3 rounded-md text-sm w-full' onChange={(e) => handleChangeVehicle(e.target.value)}>
                 {vehiculos&&
-                  vehiculos.map((p) => <option key={p.id}>{p.name}</option>)}
+                  vehiculos.map((p) => <option value={p.id+'_'+p.name} key={p.id}>{p.name}</option>)}
               </select>
             </div>{" "}
             <br />
