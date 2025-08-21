@@ -19,19 +19,20 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog"
-import { allServiciosNoPay, FetchServiciosQuery } from "@/lib/super_api"
 import { superSupabase } from "@/lib/supabase/oterClient"
 import { showToast } from "nextjs-toast-notify"
 import { URL_FOTO_DEF } from "@/const/Images"
 import { semanaDeAno } from "@/const/helper"
 import { ServicioNoId } from "@/types/util_types"
 import {
+  allServiciosNoPay,
   fetchAllChoferes,
   fetchAllPlataformas,
   fetchAllVehicles,
   FetchChoferes,
   FetchChoferesQuery,
   FetchPlataformas,
+  FetchServiciosQuery,
   FetchVehicles,
   updateServicio
 } from "@/lib/api"

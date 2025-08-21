@@ -1,7 +1,6 @@
 import { QueryData } from "@supabase/supabase-js"
 import { Database } from "@/types/db_types"
 import { superSupabase } from "./supabase/oterClient"
-import { ServicioNoId } from "@/types/util_types"
 
 export const allServicios=async () => {
 
