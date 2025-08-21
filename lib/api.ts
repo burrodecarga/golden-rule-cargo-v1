@@ -1,6 +1,7 @@
 import { QueryData } from "@supabase/supabase-js"
 import { Database } from "@/types/db_types"
 import { superSupabase } from "./supabase/oterClient"
+import { ServicioNoId } from "@/types/util_types"
 
 export const allServicios=async () => {
 
@@ -42,6 +43,25 @@ export async function crearServicio(id: string, carga: string) {
         return data[0]
     }
 }
+
+export const updateServicio=async (id: string, form: string) => {
+
+
+    const newForm=JSON.parse(form)
+    const { data, error }=await superSupabase
+        .from('servicios')
+        .update(newForm)
+        .eq('id', id)
+        .select()
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
 
 export async function updateEvent(id: string, servicio_id: string) {
     const { data, error }=await superSupabase

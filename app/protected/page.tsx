@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import Calendar from "@/components/Calendar"
 
+
 export default async function ProtectedPage() {
   const supabase=await createClient()
 

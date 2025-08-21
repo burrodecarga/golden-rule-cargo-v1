@@ -15,6 +15,7 @@ import interactionPlugin from "@fullcalendar/interaction"
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog"
@@ -31,8 +32,10 @@ import {
   FetchChoferes,
   FetchChoferesQuery,
   FetchPlataformas,
-  FetchVehicles
+  FetchVehicles,
+  updateServicio
 } from "@/lib/api"
+import { DialogDescription } from "@radix-ui/react-dialog"
 
 const Calendar: React.FC=() => {
   const [currentEvents, setCurrentEvents]=useState<EventApi[]>([])
@@ -49,21 +52,22 @@ const Calendar: React.FC=() => {
   const [choferes, setChoferes]=useState<FetchChoferes>()
   const [plataformas, setPlataformas]=useState<FetchPlataformas>()
   const [vehiculos, setVehiculos]=useState<FetchVehicles>()
+  const [argumento, setArgumento]=useState<EventChangeArg>()
 
   const hoy=new Date()
   const numSemana=semanaDeAno()
 
-  const [form, setForm]=useState<ServicioNoId>({
+  const initialForm={
     activo: 0,
     bol: URL_FOTO_DEF,
     broker: "",
     carga: "",
     chofer: "",
     chofer_id: "",
-    despachador: "pedro almendarez",
-    destino: "sprinfield los simpson ",
+    despachador: "",
+    destino: "",
     estatus_pago: "no cobrado",
-    estatus_servicio: "en proceso",
+    estatus_servicio: "programado",
     fecha_carga: "",
     fecha_entrega: "",
     forma_de_pago: "",
@@ -71,28 +75,31 @@ const Calendar: React.FC=() => {
     info_pago: "",
     millas: 300,
     num_descargas: 1,
-    observaciones: "sólo datos de carga",
-    orden: "56743",
-    origen: "texas",
-    peso: 750,
-    plataforma: "tql",
+    observaciones: "",
+    orden: "",
+    origen: "",
+    peso: 0,
+    plataforma: "",
     pod: URL_FOTO_DEF,
-    precio_de_servicio: 12000,
-    precio_mano_de_obra: 3000,
+    precio_de_servicio: 0,
+    precio_mano_de_obra: 0,
     rc: URL_FOTO_DEF,
-    ruta: "tx-sp",
-    tipo_de_carga: "vehículo",
+    ruta: "",
+    tipo_de_carga: "",
     vehiculo: "",
     vehiculo_id: "",
     dia: hoy.getDate(),
     ano: hoy.getFullYear(),
     dia_de_semana: hoy.getDay(),
-    semana: numSemana
-  })
+    semana: numSemana,
+    title: ''
+  }
+
+  const [form, setForm]=useState<ServicioNoId>(initialForm)
 
   const getChoferes=async () => {
     const resultado=await fetchAllChoferes()
-    console.log('CHOFERES', resultado)
+    //console.log('CHOFERES', resultado)
     setChoferes(resultado)
   }
 
@@ -185,42 +192,42 @@ const Calendar: React.FC=() => {
     if (!arg) return//console.log('ARGUMENTO', JSON.stringify(arg, null, 2))
     setForm((prev) => ({
       ...prev,
-      'activo': arg?.event.extendedProps.activo,
-      'bol': arg?.event.extendedProps.bol,
-      'broker': arg?.event.extendedProps.broker,
-      'carga': arg?.event.extendedProps.carga,
-      'chofer': arg?.event.extendedProps.chofer,
-      'chofer_id': arg?.event.extendedProps.chofer_id,
-      'despachador': arg?.event.extendedProps.despachador,
-      'destino': arg?.event.extendedProps.destino,
-      'estatus_pago': arg?.event.extendedProps.estatus_pago,
-      'estatus_servicio': arg?.event.extendedProps.estatus_servicio,
-      'fecha_carga': arg?.event.extendedProps.fecha_carga,
-      'fecha_entrega': arg?.event.extendedProps.fecha_entrega,
-      'forma_de_pago': arg?.event.extendedProps.forma_de_pago,
-      'gasto_estimado': arg?.event.extendedProps.gasto_estimado,
-      'info_pago': arg?.event.extendedProps.info_pago,
-      'millas': arg?.event.extendedProps.millas,
-      'num_descargas': arg?.event.extendedProps.num_descargas,
-      'observaciones': arg?.event.extendedProps.observaciones,
-      'orden': arg?.event.extendedProps.orden,
-      'origen': arg?.event.extendedProps.origen,
-      'peso': arg?.event.extendedProps.peso,
-      'plataforma': arg?.event.extendedProps.plataforma,
-      'pod': arg?.event.extendedProps.pod,
-      'precio_de_servicio': arg?.event.extendedProps.precio_de_servicio,
-      'precio_mano_de_obra': arg?.event.extendedProps.precio_mano_de_obra,
-      'rc': arg?.event.extendedProps.rc,
-      'ruta': arg?.event.extendedProps.ruta,
-      'tipo_de_carga': arg?.event.extendedProps.tipo_de_carga,
-      'vehiculo': arg?.event.extendedProps.vehiculo,
-      'vehiculo_id': arg?.event.extendedProps.vehiculo_id,
-      'dia': arg?.event.extendedProps.dia,
-      'ano': arg?.event.extendedProps.ano,
-      'dia_de_semana': arg?.event.extendedProps.dia_de_semana,
-      'semana': arg?.event.extendedProps.semana
+      activo: arg?.event.extendedProps.activo,
+      bol: arg?.event.extendedProps.bol,
+      broker: arg?.event.extendedProps.broker,
+      carga: arg?.event.extendedProps.carga,
+      chofer: arg?.event.extendedProps.chofer,
+      chofer_id: arg?.event.extendedProps.chofer_id,
+      despachador: arg?.event.extendedProps.despachador,
+      destino: arg?.event.extendedProps.destino,
+      estatus_pago: arg?.event.extendedProps.estatus_pago,
+      estatus_servicio: arg?.event.extendedProps.estatus_servicio,
+      fecha_carga: arg?.event.extendedProps.fecha_carga,
+      fecha_entrega: arg?.event.extendedProps.fecha_entrega,
+      forma_de_pago: arg?.event.extendedProps.forma_de_pago,
+      gasto_estimado: arg?.event.extendedProps.gasto_estimado,
+      info_pago: arg?.event.extendedProps.info_pago,
+      millas: arg?.event.extendedProps.millas,
+      num_descargas: arg?.event.extendedProps.num_descargas,
+      observaciones: arg?.event.extendedProps.observaciones,
+      orden: arg?.event.extendedProps.orden,
+      origen: arg?.event.extendedProps.origen,
+      peso: arg?.event.extendedProps.peso,
+      plataforma: arg?.event.extendedProps.plataforma,
+      pod: arg?.event.extendedProps.pod,
+      precio_de_servicio: arg?.event.extendedProps.precio_de_servicio,
+      precio_mano_de_obra: arg?.event.extendedProps.precio_mano_de_obra,
+      rc: arg?.event.extendedProps.rc,
+      ruta: arg?.event.extendedProps.ruta,
+      tipo_de_carga: arg?.event.extendedProps.tipo_de_carga,
+      vehiculo: arg?.event.extendedProps.vehiculo,
+      vehiculo_id: arg?.event.extendedProps.vehiculo_id,
+      dia: arg?.event.extendedProps.dia,
+      ano: arg?.event.extendedProps.ano,
+      dia_de_semana: arg?.event.extendedProps.dia_de_semana,
+      semana: arg?.event.extendedProps.semana
     }))
-    console.log('FORM', JSON.stringify(form, null, 2))
+    //console.log('FORM', JSON.stringify(form, null, 2))
     setIsDialogEventOpen(true)
   }
 
@@ -228,6 +235,12 @@ const Calendar: React.FC=() => {
     setIsDialogOpen(false)
     setNewEventTitle("")
     setNewEventPrice("")
+  }
+
+  const handleCloseEventDialog=() => {
+    setIsDialogEventOpen(false)
+    setArg(undefined)
+    setForm(initialForm)
   }
 
   const handleAddEventInBD=async (
@@ -248,6 +261,23 @@ const Calendar: React.FC=() => {
       ])
       .select()
     setCambio(!cambio)
+  }
+
+  const handleAddEventDetail=async () => {
+    setLoading(true)
+    var postData=JSON.stringify(form)
+    var formData=new FormData()
+    formData.append("postData", postData)
+    const resultado=await updateServicio(arg?.event.id!, postData)
+    //console.log('RESULTADO', resultado, 'ID', arg?.event.id)
+    setLoading(false)
+    setIsDialogEventOpen(false)
+    setArg(undefined)
+    setForm(initialForm)
+    showMsg()
+    handleCloseEventDialog()
+    setCambio(!cambio)
+
   }
 
   const handleAddEvent=(e: React.FormEvent) => {
@@ -313,12 +343,12 @@ const Calendar: React.FC=() => {
             {currentEvents.length>0&&
               currentEvents.map((event: EventApi) => (
                 <li
-                  className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800'
-                  key={event.id}
+                  className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs'
+                  key={event.id+new Date().toLocaleTimeString()}
                 >
                   {event.title}
                   <br />
-                  <label className='text-slate-950'>
+                  <label className='text-slate-950 text-[10px]'>
                     {formatDate(event.start!, {
                       year: "numeric",
                       month: "short",
@@ -326,6 +356,15 @@ const Calendar: React.FC=() => {
                     })}{" "}
                     {/* Format event start date */}
                   </label>
+                  <br />
+
+                  {event.extendedProps.ruta&&event.extendedProps.ruta}
+                  <br />
+                  {event.extendedProps.chofer&&event.extendedProps.chofer}
+                  <br />
+                  {event.extendedProps.precio_de_servicio? event.extendedProps.precio_de_servicio+' $':''}
+
+
                 </li>
               ))}
           </ul>
@@ -361,6 +400,7 @@ const Calendar: React.FC=() => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add New Event Details</DialogTitle>
+            <DialogDescription>New info</DialogDescription>
           </DialogHeader>
           <form className='mb-4 space-y-4' onSubmit={handleAddEvent}>
             <input
@@ -392,128 +432,130 @@ const Calendar: React.FC=() => {
       </Dialog>
 
       {/* Dialog for vew event */}
+
       <Dialog open={isDialogEventOpen} onOpenChange={setIsDialogEventOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Event Details</DialogTitle>
-            <div className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs space-y-6'>
-              <div className="flex flex-row gap-3">
-                <input
-                  type='text'
-                  placeholder='Orden #'
-                  value={form.orden}
-                  onChange={(e) => handleChange('orden', e.target.value)} // Update new event title as the user types.
-                  required
-                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
-                />
-                <input
-                  type='date'
-                  placeholder='Date'
-                  value={form.fecha_carga}
-                  onChange={(e) => handleChange('fecha_carga', e.target.value)} // Update new event title as the user types.
-                  required
-                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
-                />
-                <input
-                  type='text'
-                  placeholder='Ruta'
-                  value={form.ruta}
-                  onChange={(e) => handleChange('ruta', e.target.value)} // Update new event title as the user types.
-                  required
-                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
-                />
-
-              </div>
-              <div className="flex flex-row gap-3">
-                <input
-                  type='text'
-                  placeholder='Origin'
-                  value={form.origen}
-                  onChange={(e) => handleChange('origen', e.target.value)} // Update new event title as the user types.
-                  required
-                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
-                />
-
-                <input
-                  type='text'
-                  placeholder='Broker'
-                  value={form.broker}
-                  onChange={(e) => handleChange('broker', e.target.value)} // Update new event title as the user types.
-                  required
-                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
-                />
-
-              </div>
-              <div className="flex flex-row gap-3">
-                <input
-                  type='text'
-                  placeholder='Destination'
-                  value={form.destino}
-                  onChange={(e) => handleChange('destino', e.target.value)} // Update new event title as the user types.
-                  required
-                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
-                />
-
-                <input
-                  type='text'
-                  placeholder='Payload'
-                  value={form.carga}
-                  onChange={(e) => handleChange('carga', e.target.value)} // Update new event title as the user types.
-                  required
-                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
-                />
-
-              </div>
-              <div className="flex flex-row gap-3">
-                <input
-                  type='text'
-                  placeholder='Price of service'
-                  value={form.precio_de_servicio}
-                  onChange={(e) => handleChange('precio_de_servicio', e.target.value)} // Update new event title as the user types.
-                  required
-                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
-                />
-
-                <input
-                  type='text'
-                  placeholder='method of payment..'
-                  value={form.forma_de_pago}
-                  onChange={(e) => handleChange('forma_de_pago', e.target.value)} // Update new event title as the user types.
-                  required
-                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
-                />
-
-                <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
-                  {plataformas&&plataformas.map(p => <option>{p.nombre}</option>)}
-                </select>
-              </div>
-              <div className="flex flex-row gap-3">
-                <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
-                  {choferes&&choferes.map(p => <option>{p.username}</option>)}
-                </select>
-                <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
-                  {vehiculos&&vehiculos.map(p => <option>{p.name}</option>)}
-                </select>
-              </div>
-
-
-
-
-              <br />
-              <button
-                onClick={() => deleteEvent(arg?.event.id!)}
-                className='p-4 py-2 bg-red-500 text-white rounded mr-4'
-              >
-                delete
-              </button>
-              <button
-                onClick={() => addDetails(arg?.event.id!)}
-                className='p-4 py-2 bg-green-500 text-white rounded'
-              >
-                add details
-              </button>
-            </div>
+            <DialogTitle>Add New Event Details</DialogTitle>
+            <DialogDescription>New edit info</DialogDescription>
           </DialogHeader>
+          <div className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs space-y-6'>
+            <div className='flex flex-row gap-3'>
+              <input
+                type='text'
+                placeholder='Orden #'
+                value={form.orden!==null? form.orden:''}
+                onChange={(e) => handleChange("orden", e.target.value)} // Update new event title as the user types.
+                required
+                className='border border-gray-200 p-3 rounded-md text-lg w-full'
+              />
+              <input
+                type='date'
+                placeholder='Date'
+                value={form.fecha_carga!==null? form.fecha_carga:new Date().toDateString()}
+                onChange={(e) => handleChange("fecha_carga", e.target.value)} // Update new event title as the user types.
+                required
+                className='border border-gray-200 p-3 rounded-md text-lg w-full'
+              />
+              <input
+                type='text'
+                placeholder='Ruta'
+                value={form.ruta!==null? form.ruta:''}
+                onChange={(e) => handleChange("ruta", e.target.value)} // Update new event title as the user types.
+                required
+                className='border border-gray-200 p-3 rounded-md text-lg w-full'
+              />
+            </div>
+            <div className='flex flex-row gap-3'>
+              <input
+                type='text'
+                placeholder='Origin'
+                value={form.origen!==null? form.origen:''}
+                onChange={(e) => handleChange("origen", e.target.value)} // Update new event title as the user types.
+                required
+                className='border border-gray-200 p-3 rounded-md text-lg w-full'
+              />
+
+              <input
+                type='text'
+                placeholder='Broker'
+                value={form.broker!==null? form.broker:''}
+                onChange={(e) => handleChange("broker", e.target.value)} // Update new event title as the user types.
+                required
+                className='border border-gray-200 p-3 rounded-md text-lg w-full'
+              />
+            </div>
+            <div className='flex flex-row gap-3'>
+              <input
+                type='text'
+                placeholder='Destination'
+                value={form.destino!==null? form.destino:''}
+                onChange={(e) => handleChange("destino", e.target.value)} // Update new event title as the user types.
+                required
+                className='border border-gray-200 p-3 rounded-md text-lg w-full'
+              />
+
+              <input
+                type='text'
+                placeholder='Payload'
+                value={form.carga!==null? form.carga:''}
+                onChange={(e) => handleChange("carga", e.target.value)} // Update new event title as the user types.
+                required
+                className='border border-gray-200 p-3 rounded-md text-lg w-full'
+              />
+            </div>
+            <div className='flex flex-row gap-3'>
+              <input
+                type='text'
+                placeholder='Price of service'
+                value={form.precio_de_servicio!==null? form.precio_de_servicio:0}
+                onChange={(e) =>
+                  handleChange("precio_de_servicio", e.target.value)
+                } // Update new event title as the user types.
+                required
+                className='border border-gray-200 p-3 rounded-md text-lg w-full'
+              />
+
+              <input
+                type='text'
+                placeholder='method of payment..'
+                value={form.forma_de_pago!==null? form.forma_de_pago:''}
+                onChange={(e) => handleChange("forma_de_pago", e.target.value)} // Update new event title as the user types.
+                required
+                className='border border-gray-200 p-3 rounded-md text-lg w-full'
+              />
+
+              <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
+                {plataformas&&
+                  plataformas.map((p) => (
+                    <option key={p.id}>{p.nombre}</option>
+                  ))}
+              </select>
+            </div>
+            <div className='flex flex-row gap-3'>
+              <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
+                {choferes&&
+                  choferes.map((p) => <option key={p.id}>{p.username}</option>)}
+              </select>
+              <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
+                {vehiculos&&
+                  vehiculos.map((p) => <option key={p.id}>{p.name}</option>)}
+              </select>
+            </div>{" "}
+            <br />
+            <button
+              onClick={() => deleteEvent(arg?.event.id!)}
+              className='p-4 py-2 bg-red-500 text-white rounded mr-4'
+            >
+              delete
+            </button>
+            <button
+              onClick={() => handleAddEventDetail()}
+              className='p-4 py-2 bg-green-500 text-white rounded'
+            >
+              add details
+            </button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

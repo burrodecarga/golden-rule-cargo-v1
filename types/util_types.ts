@@ -130,5 +130,6 @@ export interface ServicioNoId {
     dia: number
     dia_de_semana: number
     semana: number
+    title: string
 }
 
