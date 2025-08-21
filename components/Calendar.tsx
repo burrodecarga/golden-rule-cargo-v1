@@ -6,7 +6,7 @@ import {
   DateSelectArg,
   EventClickArg,
   EventApi,
-  EventChangeArg,
+  EventChangeArg
 } from "@fullcalendar/core"
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
@@ -16,7 +16,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog"
 import { allServiciosNoPay, FetchServiciosQuery } from "@/lib/super_api"
 import { superSupabase } from "@/lib/supabase/oterClient"
@@ -24,8 +24,15 @@ import { showToast } from "nextjs-toast-notify"
 import { URL_FOTO_DEF } from "@/const/Images"
 import { semanaDeAno } from "@/const/helper"
 import { ServicioNoId } from "@/types/util_types"
-import { fetchAllChoferes, fetchAllPlataformas, fetchAllVehicles, FetchChoferes, FetchChoferesQuery, FetchPlataformas, FetchVehicles } from "@/lib/api"
-
+import {
+  fetchAllChoferes,
+  fetchAllPlataformas,
+  fetchAllVehicles,
+  FetchChoferes,
+  FetchChoferesQuery,
+  FetchPlataformas,
+  FetchVehicles
+} from "@/lib/api"
 
 const Calendar: React.FC=() => {
   const [currentEvents, setCurrentEvents]=useState<EventApi[]>([])
@@ -85,6 +92,7 @@ const Calendar: React.FC=() => {
 
   const getChoferes=async () => {
     const resultado=await fetchAllChoferes()
+    console.log('CHOFERES', resultado)
     setChoferes(resultado)
   }
 
@@ -98,25 +106,22 @@ const Calendar: React.FC=() => {
     setVehiculos(resultado)
   }
 
-
   const handleChange=(name: string, text: string): void => {
-
     setForm((prev) => ({
       ...prev,
       [name]: text
     }))
   }
 
-
-  const showMsg=() => showToast.success("¡La operación se realizó con éxito!", {
-    duration: 4000,
-    progress: true,
-    position: "top-right",
-    transition: "bounceIn",
-    icon: '',
-    sound: true,
-  })
-
+  const showMsg=() =>
+    showToast.success("¡La operación se realizó con éxito!", {
+      duration: 4000,
+      progress: true,
+      position: "top-right",
+      transition: "bounceIn",
+      icon: "",
+      sound: true
+    })
 
   const getNewCurrentsEvents=async () => {
     const result=await allServiciosNoPay()
@@ -148,7 +153,6 @@ const Calendar: React.FC=() => {
     getVehiculos()
   }, [])
 
-
   useEffect(() => {
     getNewCurrentsEvents()
   }, [cambio])
@@ -177,8 +181,47 @@ const Calendar: React.FC=() => {
 
   const handleEventClick=(selected: EventClickArg) => {
     const ruta=`/protected/servicios/servicio/?${selected.event.id}`
+    setArg(() => selected)
+    if (!arg) return//console.log('ARGUMENTO', JSON.stringify(arg, null, 2))
+    setForm((prev) => ({
+      ...prev,
+      'activo': arg?.event.extendedProps.activo,
+      'bol': arg?.event.extendedProps.bol,
+      'broker': arg?.event.extendedProps.broker,
+      'carga': arg?.event.extendedProps.carga,
+      'chofer': arg?.event.extendedProps.chofer,
+      'chofer_id': arg?.event.extendedProps.chofer_id,
+      'despachador': arg?.event.extendedProps.despachador,
+      'destino': arg?.event.extendedProps.destino,
+      'estatus_pago': arg?.event.extendedProps.estatus_pago,
+      'estatus_servicio': arg?.event.extendedProps.estatus_servicio,
+      'fecha_carga': arg?.event.extendedProps.fecha_carga,
+      'fecha_entrega': arg?.event.extendedProps.fecha_entrega,
+      'forma_de_pago': arg?.event.extendedProps.forma_de_pago,
+      'gasto_estimado': arg?.event.extendedProps.gasto_estimado,
+      'info_pago': arg?.event.extendedProps.info_pago,
+      'millas': arg?.event.extendedProps.millas,
+      'num_descargas': arg?.event.extendedProps.num_descargas,
+      'observaciones': arg?.event.extendedProps.observaciones,
+      'orden': arg?.event.extendedProps.orden,
+      'origen': arg?.event.extendedProps.origen,
+      'peso': arg?.event.extendedProps.peso,
+      'plataforma': arg?.event.extendedProps.plataforma,
+      'pod': arg?.event.extendedProps.pod,
+      'precio_de_servicio': arg?.event.extendedProps.precio_de_servicio,
+      'precio_mano_de_obra': arg?.event.extendedProps.precio_mano_de_obra,
+      'rc': arg?.event.extendedProps.rc,
+      'ruta': arg?.event.extendedProps.ruta,
+      'tipo_de_carga': arg?.event.extendedProps.tipo_de_carga,
+      'vehiculo': arg?.event.extendedProps.vehiculo,
+      'vehiculo_id': arg?.event.extendedProps.vehiculo_id,
+      'dia': arg?.event.extendedProps.dia,
+      'ano': arg?.event.extendedProps.ano,
+      'dia_de_semana': arg?.event.extendedProps.dia_de_semana,
+      'semana': arg?.event.extendedProps.semana
+    }))
+    console.log('FORM', JSON.stringify(form, null, 2))
     setIsDialogEventOpen(true)
-    setArg(selected)
   }
 
   const handleCloseDialog=() => {
@@ -193,7 +236,7 @@ const Calendar: React.FC=() => {
     startD: Date,
     endD: Date
   ) => {
-    const fullEvent=newEventTitle+', '+newEventPrice
+    const fullEvent=newEventTitle+", "+newEventPrice
     const { data, error }=await superSupabase
       .from("servicios")
       .insert([
@@ -222,7 +265,12 @@ const Calendar: React.FC=() => {
       // }
       // calendarApi.addEvent(newEvent)
 
-      handleAddEventInBD(newEventTitle, newEventPrice, selectedDate.start, selectedDate.end)
+      handleAddEventInBD(
+        newEventTitle,
+        newEventPrice,
+        selectedDate.start,
+        selectedDate.end
+      )
 
       handleCloseDialog()
     }
@@ -236,7 +284,6 @@ const Calendar: React.FC=() => {
         .delete()
         .eq("id", id)
         .select()
-
     } catch (error) {
       console.log(error)
     } finally {
@@ -246,21 +293,19 @@ const Calendar: React.FC=() => {
     setIsDialogEventOpen(false)
     setCambio(!cambio)
     showMsg()
-
   }
   const addDetails=async (id: string) => { }
 
-
   return (
     <div>
-      <div className="flex w-full px-10 justify-start items-start gap-8">
-        <div className="w-3/12">
-          <div className="py-10 text-2xl font-extrabold px-7">
+      <div className='flex w-full px-10 justify-start items-start gap-8'>
+        <div className='w-3/12'>
+          <div className='py-10 text-2xl font-extrabold px-7'>
             Calendar Events
           </div>
-          <ul className="space-y-4">
+          <ul className='space-y-4'>
             {currentEvents.length<=0&&(
-              <div className="italic text-center text-gray-400">
+              <div className='italic text-center text-gray-400'>
                 No Events Present
               </div>
             )}
@@ -268,16 +313,16 @@ const Calendar: React.FC=() => {
             {currentEvents.length>0&&
               currentEvents.map((event: EventApi) => (
                 <li
-                  className="border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800"
+                  className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800'
                   key={event.id}
                 >
                   {event.title}
                   <br />
-                  <label className="text-slate-950">
+                  <label className='text-slate-950'>
                     {formatDate(event.start!, {
                       year: "numeric",
                       month: "short",
-                      day: "numeric",
+                      day: "numeric"
                     })}{" "}
                     {/* Format event start date */}
                   </label>
@@ -286,16 +331,16 @@ const Calendar: React.FC=() => {
           </ul>
         </div>
 
-        <div className="w-9/12 mt-8">
+        <div className='w-9/12 mt-8'>
           <FullCalendar
             height={"85vh"}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // Initialize calendar with required plugins.
             headerToolbar={{
               left: "prev,next today",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
             }} // Set header toolbar options.
-            initialView="dayGridMonth" // Initial view mode of the calendar.
+            initialView='dayGridMonth' // Initial view mode of the calendar.
             editable={true} // Allow events to be edited.
             selectable={true} // Allow dates to be selectable.
             selectMirror={true} // Mirror selections visually.
@@ -303,7 +348,6 @@ const Calendar: React.FC=() => {
             select={handleDateClick} // Handle date selection to create new events.
             eventClick={handleEventClick} // Handle clicking on events (e.g., to delete them).
             eventsSet={(events) => setCurrentEvents(events)} // Update state with current events whenever they change.
-
             // Initial events loaded from local storage.
             events={newCurrentEvents}
             eventChange={(arg: EventChangeArg) => updateEvent(arg)}
@@ -319,7 +363,6 @@ const Calendar: React.FC=() => {
             <DialogTitle>Add New Event Details</DialogTitle>
           </DialogHeader>
           <form className='mb-4 space-y-4' onSubmit={handleAddEvent}>
-
             <input
               type='text'
               placeholder='Event Title'
@@ -354,23 +397,123 @@ const Calendar: React.FC=() => {
           <DialogHeader>
             <DialogTitle>Event Details</DialogTitle>
             <div className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs space-y-6'>
-              <label>{arg?.event.title}</label>
+              <div className="flex flex-row gap-3">
+                <input
+                  type='text'
+                  placeholder='Orden #'
+                  value={form.orden}
+                  onChange={(e) => handleChange('orden', e.target.value)} // Update new event title as the user types.
+                  required
+                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
+                />
+                <input
+                  type='date'
+                  placeholder='Date'
+                  value={form.fecha_carga}
+                  onChange={(e) => handleChange('fecha_carga', e.target.value)} // Update new event title as the user types.
+                  required
+                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
+                />
+                <input
+                  type='text'
+                  placeholder='Ruta'
+                  value={form.ruta}
+                  onChange={(e) => handleChange('ruta', e.target.value)} // Update new event title as the user types.
+                  required
+                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
+                />
+
+              </div>
+              <div className="flex flex-row gap-3">
+                <input
+                  type='text'
+                  placeholder='Origin'
+                  value={form.origen}
+                  onChange={(e) => handleChange('origen', e.target.value)} // Update new event title as the user types.
+                  required
+                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
+                />
+
+                <input
+                  type='text'
+                  placeholder='Broker'
+                  value={form.broker}
+                  onChange={(e) => handleChange('broker', e.target.value)} // Update new event title as the user types.
+                  required
+                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
+                />
+
+              </div>
+              <div className="flex flex-row gap-3">
+                <input
+                  type='text'
+                  placeholder='Destination'
+                  value={form.destino}
+                  onChange={(e) => handleChange('destino', e.target.value)} // Update new event title as the user types.
+                  required
+                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
+                />
+
+                <input
+                  type='text'
+                  placeholder='Payload'
+                  value={form.carga}
+                  onChange={(e) => handleChange('carga', e.target.value)} // Update new event title as the user types.
+                  required
+                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
+                />
+
+              </div>
+              <div className="flex flex-row gap-3">
+                <input
+                  type='text'
+                  placeholder='Price of service'
+                  value={form.precio_de_servicio}
+                  onChange={(e) => handleChange('precio_de_servicio', e.target.value)} // Update new event title as the user types.
+                  required
+                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
+                />
+
+                <input
+                  type='text'
+                  placeholder='method of payment..'
+                  value={form.forma_de_pago}
+                  onChange={(e) => handleChange('forma_de_pago', e.target.value)} // Update new event title as the user types.
+                  required
+                  className='border border-gray-200 p-3 rounded-md text-lg w-full'
+                />
+
+                <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
+                  {plataformas&&plataformas.map(p => <option>{p.nombre}</option>)}
+                </select>
+              </div>
+              <div className="flex flex-row gap-3">
+                <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
+                  {choferes&&choferes.map(p => <option>{p.username}</option>)}
+                </select>
+                <select className='border border-gray-200 p-3 rounded-md text-sm w-full'>
+                  {vehiculos&&vehiculos.map(p => <option>{p.name}</option>)}
+                </select>
+              </div>
+
+
+
 
               <br />
-              <label className='text-slate-950'>
-                {formatDate(arg?.event.start!, {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric"
-                })}{" "}
-                {/* Format event start date */}
-              </label>
-              <br />
-              <button onClick={() => deleteEvent(arg?.event.id!)} className="p-4 py-2 bg-red-500 text-white rounded mr-4">delete</button>
-              <button onClick={() => addDetails(arg?.event.id!)} className="p-4 py-2 bg-green-500 text-white rounded">add details</button>
+              <button
+                onClick={() => deleteEvent(arg?.event.id!)}
+                className='p-4 py-2 bg-red-500 text-white rounded mr-4'
+              >
+                delete
+              </button>
+              <button
+                onClick={() => addDetails(arg?.event.id!)}
+                className='p-4 py-2 bg-green-500 text-white rounded'
+              >
+                add details
+              </button>
             </div>
           </DialogHeader>
-
         </DialogContent>
       </Dialog>
     </div>
