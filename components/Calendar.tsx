@@ -279,7 +279,7 @@ const Calendar: React.FC=() => {
     var postData=JSON.stringify(form)
     var formData=new FormData()
     formData.append("postData", postData)
-    const resultado=await updateServicio(arg?.event.id!, postData)
+    const resultado=await updateServicio(arg?.event.id!, postData.toLocaleLowerCase())
     //console.log('RESULTADO', resultado, 'ID', arg?.event.id)
     setLoading(false)
     setIsDialogEventOpen(false)
@@ -536,7 +536,7 @@ const Calendar: React.FC=() => {
                 className='border border-gray-200 p-3 rounded-md text-lg w-full'
               />
 
-              <select className='border border-gray-200 p-3 rounded-md text-sm w-full' value={form.plataforma} onChange={(e) => handleChange('plataforma', e.target.value)}>
+              <select id="plataformas" className='border border-gray-200 p-3 rounded-md text-sm w-full' value={form.plataforma} onChange={(e) => handleChange('plataforma', e.target.value)}>
                 {plataformas&&
                   plataformas.map((p) => (
                     <option value={p.nombre!} key={p.id}>{p.nombre}</option>
@@ -544,11 +544,11 @@ const Calendar: React.FC=() => {
               </select>
             </div>
             <div className='flex flex-row gap-3'>
-              <select className='border border-gray-200 p-3 rounded-md text-sm w-full' onChange={(e) => handleChangeChofer(e.target.value)}>
+              <select id="choferes" className='border border-gray-200 p-3 rounded-md text-sm w-full' onChange={(e) => handleChangeChofer(e.target.value)}>
                 {choferes&&
                   choferes.map((p) => <option value={p.id+'_'+p.username} key={p.id}>{p.username}</option>)}
               </select>
-              <select className='border border-gray-200 p-3 rounded-md text-sm w-full' onChange={(e) => handleChangeVehicle(e.target.value)}>
+              <select id="vehiculos" className='border border-gray-200 p-3 rounded-md text-sm w-full' onChange={(e) => handleChangeVehicle(e.target.value)}>
                 {vehiculos&&
                   vehiculos.map((p) => <option value={p.id+'_'+p.name} key={p.id}>{p.name}</option>)}
               </select>

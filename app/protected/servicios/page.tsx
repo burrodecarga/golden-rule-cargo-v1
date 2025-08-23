@@ -1,48 +1,25 @@
 'use server'
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { allServicios } from "@/lib/api_server"
+import Pagination from "@/components/pagination"
+import Search from "@/components/search"
+import ServicesTable from "@/components/table-servicio"
+import { fetchServicesTotalPages } from "@/lib/api_server"
+import { Suspense } from "react"
 
-export default async function ServiciosScreenList() {
-    let totalArray: number[]=[]
-    let total=0
-    const datos=await allServicios()
-    if (datos) {
-        totalArray=datos.map((a) => Number(a.precio_de_servicio))
-        total=totalArray.reduce((a, b) => a+b, 0)
+export default async function ServiciosScreenList({ searchParams }: { searchParams?: { query?: string, page?: number|1 } }) {
 
-    }
+    const query=searchParams?.query||''
+    const currentPage=searchParams?.page||1
+    const totalPage=await fetchServicesTotalPages(query, currentPage)
 
     return (
-        <Table>
-            <TableCaption>A list of your recent services.</TableCaption>
-            <TableHeader>
-                <TableRow>
-                    <TableHead className="w-[100px]">Route</TableHead>
-                    <TableHead>service status</TableHead>
-                    <TableHead>payment status</TableHead>
-                    <TableHead>method of payment</TableHead>
-                    <TableHead>driver</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {datos&&datos.map((d) => (
-                    <TableRow key={d.id} >
-                        <TableCell className="uppercase text-[10px]">{d.ruta}</TableCell>
-                        <TableCell className="uppercase text-[10px]">{d.estatus_servicio}</TableCell>
-                        <TableCell className="uppercase text-[10px]">{d.estatus_pago}</TableCell>
-                        <TableCell className="uppercase text-[10px]">{d.forma_de_pago}</TableCell>
-                        <TableCell className="uppercase text-[10px]">{d.chofer}</TableCell>
-                        <TableCell className="text-right">{d.precio_de_servicio}</TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-            <TableFooter>
-                <TableRow>
-                    <TableCell colSpan={5}>Total</TableCell>
-                    <TableCell className="text-right">${total.toLocaleString()}</TableCell>
-                </TableRow>
-            </TableFooter>
-        </Table>
+        <>
+
+            <Suspense key={query+currentPage} fallback={<div><p>Cargando....</p></div>}>
+                <Search placeholder="find service" />
+                <ServicesTable query={query} currentPage={currentPage} />
+            </Suspense>
+            {/* <Pagination totalPages={totalPage.count!} /> */}
+
+        </>
     )
 }
