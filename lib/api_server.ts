@@ -47,6 +47,8 @@ export const fetchServicesTotalPages=async (query: string, page: number) => {
 }
 
 export const fetchServicioById=async (id: string) => {
+
+    //console.log('SERVIDOR', id)
     const { data, error }=await supabase.from("servicios").select(`
 id,
 activo,
@@ -108,7 +110,7 @@ tipo,url)
         return []
     } else {
         //console.log("EXITO", data)
-        return data
+        return data[0]
     }
 }
 

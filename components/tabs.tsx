@@ -17,15 +17,90 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
+import { TypeServicio } from "@/types/util_types"
+import { FetchServiciosById } from "@/lib/api_server"
+import { DBServicio, FetchServiciosQuery } from "@/lib/api"
 
-export function TabsDemo() {
+interface TabsProps {
+    servicio: DBServicio
+}
+export function TabsDetailServicio(servicio: TabsProps) {
+    console.log('SERVICIO EN TAB', servicio.servicio)
     return (
-        <div className="flex w-full max-w-sm flex-col gap-6">
-            <Tabs defaultValue="account">
+        <div className="flex w-full max-w-7xl flex-col gap-6">
+            <Tabs defaultValue="general">
                 <TabsList>
-                    <TabsTrigger value="account">Account</TabsTrigger>
-                    <TabsTrigger value="password">Password</TabsTrigger>
+                    <TabsTrigger value="general">General</TabsTrigger>
+                    <TabsTrigger value="account">Payload</TabsTrigger>
+                    <TabsTrigger value="password">Source</TabsTrigger>
                 </TabsList>
+                <TabsContent value="general">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>General</CardTitle>
+                            <CardDescription>
+                                General cargo information, driver data, broker, origin and destination
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="grid grid-cols-3 gap-6">
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-name">Date</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.fecha_carga!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-username">Source</Label>
+                                <Input id="tabs-demo-username" defaultValue={servicio.servicio?.plataforma!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-username">Broker</Label>
+                                <Input id="tabs-demo-username" defaultValue={servicio.servicio?.broker!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-name">Payload</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.carga!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-name">Origin</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.origen!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-name">Destination</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.destino!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-name">Dispacher</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.despachador!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-name">Weight</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.peso!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-name">Price</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.precio_de_servicio!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-name">Pay</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.forma_de_pago!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-name">Driver</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.chofer!} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="tabs-demo-name">Vehicle</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.vehiculo!} />
+                            </div>
+                            <div className="grid gap-3 col-span-3">
+                                <Label htmlFor="tabs-demo-name">Observation</Label>
+                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.observaciones!} />
+                            </div>
+                        </CardContent>
+                        <CardFooter>
+                            <Button>Save changes</Button>
+                        </CardFooter>
+                    </Card>
+                </TabsContent>
                 <TabsContent value="account">
                     <Card>
                         <CardHeader>

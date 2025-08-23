@@ -47,8 +47,8 @@ export default async function ServicesTable({
             </TableHeader>
             <TableBody>
               {datos&&datos.map((d) => (
-                <TableRow key={d.id} className="cursor-pointer">
-                  <TableCell className="uppercase text-[10px]">{formatDate(d.start)}</TableCell>
+                <TableRow key={d.id}>
+                  <TableCell className="uppercase text-[10px]">{formatDate(d.start!)}</TableCell>
                   <TableCell className="uppercase text-[10px]">{d.semana}</TableCell>
                   <TableCell className="uppercase text-[10px]">{d.orden}</TableCell>
                   <TableCell className="uppercase text-[10px]">{d.plataforma}</TableCell>
@@ -57,8 +57,8 @@ export default async function ServicesTable({
                   <TableCell className="uppercase text-[10px]">{d.estatus_pago}</TableCell>
                   <TableCell className="uppercase text-[10px]">{d.forma_de_pago}</TableCell>
                   <TableCell className="uppercase text-[10px]">{d.chofer}</TableCell>
-                  <TableCell className="uppercase text-[10px]"><Link href={{
-                    pathname: '/protected/servicios/servicio',
+                  <TableCell className="uppercase text-[10px] cursor-pointer text-blue-600 text-center"><Link href={{
+                    pathname: '/protected/servicios/servicio/',
                     query: { id: d.id },
                   }}>ir</Link></TableCell>
                   <TableCell className="text-right">{d.precio_de_servicio}</TableCell>
