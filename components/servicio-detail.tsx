@@ -5,13 +5,13 @@ import { TabsDetailServicio } from './tabs'
 
 export default async function ServicioDetail(id: { id: string }) {
 
-    const servicioId=id.id
-    const servicio=await fetchServicioById(servicioId)
+
+    const servicio=await fetchServicioById(id.id)
 
     //console.log(id.id, servicio)
     return (
         <Suspense >
-            <TabsDetailServicio servicio={servicio} />
+            {/* <TabsDetailServicio servicio={servicio} /> */}
         </Suspense>
     )
 }

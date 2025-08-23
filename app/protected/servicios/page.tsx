@@ -1,15 +1,19 @@
-'use server'
-import Pagination from "@/components/pagination"
+'user serve'
 import Search from "@/components/search"
 import ServicesTable from "@/components/table-servicio"
-import { fetchServicesTotalPages } from "@/lib/api_server"
 import { Suspense } from "react"
 
-export default async function ServiciosScreenList({ searchParams }: { searchParams?: { query?: string, page?: number|1 } }) {
 
+export default async function Page(props: {
+    searchParams?: Promise<{
+        query?: string
+        page?: string
+    }>
+}) {
+    const searchParams=await props.searchParams
     const query=searchParams?.query||''
-    const currentPage=searchParams?.page||1
-    const totalPage=await fetchServicesTotalPages(query, currentPage)
+    const currentPage=Number(searchParams?.page)||1
+    //const totalPage=await fetchServicesTotalPages(query, currentPage)
 
     return (
         <>
