@@ -107,7 +107,7 @@ tipo,url)
     }).limit(1)
     if (error) {
         console.log("error", error)
-        return []
+
     } else {
         //console.log("EXITO", data)
         return data[0]
@@ -115,7 +115,6 @@ tipo,url)
 }
 
 export type ServicioByID=Awaited<ReturnType<typeof fetchServicioById>>
-
 export type FetchServiciosById=Awaited<ReturnType<typeof fetchServicioById>>
 export type ServicioRow=Database["public"]["Tables"]["servicios"]["Row"]
 export type Fotos_Servicios=

@@ -11,7 +11,7 @@ export default async function ServicioDetail(id: { id: string }) {
     //console.log(id.id, servicio)
     return (
         <Suspense >
-            {/* <TabsDetailServicio servicio={servicio} /> */}
+            <TabsDetailServicio item={servicio} />
         </Suspense>
     )
 }

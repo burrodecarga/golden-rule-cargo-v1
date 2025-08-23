@@ -17,15 +17,15 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { TypeServicio } from "@/types/util_types"
-import { FetchServiciosById } from "@/lib/api_server"
-import { DBServicio, FetchServiciosQuery } from "@/lib/api"
+import { ServicioByID } from "@/lib/api_server"
 
 interface TabsProps {
-    servicio: DBServicio
+    servicio: {
+        servicio: ServicioByID
+    }
 }
-export function TabsDetailServicio(servicio: TabsProps) {
-    console.log('SERVICIO EN TAB', servicio.servicio)
+export function TabsDetailServicio(servicio: { item: ServicioByID }) {
+    //console.log('SERVICIO EN TAB', servicio)
     return (
         <div className="flex w-full max-w-7xl flex-col gap-6">
             <Tabs defaultValue="general">
@@ -45,55 +45,55 @@ export function TabsDetailServicio(servicio: TabsProps) {
                         <CardContent className="grid grid-cols-3 gap-6">
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Date</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.fecha_carga!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.fecha_carga!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-username">Source</Label>
-                                <Input id="tabs-demo-username" defaultValue={servicio.servicio?.plataforma!} />
+                                <Input id="tabs-demo-username" defaultValue={servicio.item?.plataforma!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-username">Broker</Label>
-                                <Input id="tabs-demo-username" defaultValue={servicio.servicio?.broker!} />
+                                <Input id="tabs-demo-username" defaultValue={servicio.item?.broker!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Payload</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.carga!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.carga!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Origin</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.origen!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.origen!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Destination</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.destino!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.destino!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Dispacher</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.despachador!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.despachador!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Weight</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.peso!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.peso!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Price</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.precio_de_servicio!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.precio_de_servicio!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Pay</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.forma_de_pago!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.forma_de_pago!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Driver</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.chofer!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.chofer!} />
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Vehicle</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.vehiculo!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.vehiculo!} />
                             </div>
                             <div className="grid gap-3 col-span-3">
                                 <Label htmlFor="tabs-demo-name">Observation</Label>
-                                <Input id="tabs-demo-name" defaultValue={servicio.servicio?.observaciones!} />
+                                <Input id="tabs-demo-name" defaultValue={servicio.item?.observaciones!} />
                             </div>
                         </CardContent>
                         <CardFooter>
