@@ -3,6 +3,7 @@ import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
+  TruckIcon,
 } from '@heroicons/react/24/outline'
 import { DamIcon, PieChartIcon } from 'lucide-react'
 import Link from 'next/link'
@@ -18,7 +19,8 @@ const links=[
     href: '/protected/estadisticas',
     icon: PieChartIcon,
   },
-  { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
+  { name: 'Users', href: '/protected/users', icon: UserGroupIcon },
+  { name: 'Vehicles', href: '/protected/vehicles', icon: TruckIcon },
 ]
 
 export default function NavLinks() {

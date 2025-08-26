@@ -355,6 +355,20 @@ export type PlataformaSemana=PlataformaSemanas[number]
 export type ChoferSemanas=Awaited<ReturnType<typeof fetchChoferSemanas>>
 //export type ChoferSemana=Plataformas[number]
 
+export const fetchAllUsers=async () => {
+    const { data, error }=await supabase
+        .from("profiles")
+        .select("*")
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export type AllUsers=Awaited<ReturnType<typeof fetchAllUsers>>
+export type AllUser=AllUsers[number]
 
 
 
