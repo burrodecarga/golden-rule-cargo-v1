@@ -86,6 +86,13 @@ export type Database = {
             foreignKeyName: "fotos_servicios_servicio_id_fkey"
             columns: ["servicio_id"]
             isOneToOne: false
+            referencedRelation: "resultado_por_semana_y_dia_total"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fotos_servicios_servicio_id_fkey"
+            columns: ["servicio_id"]
+            isOneToOne: false
             referencedRelation: "servicios"
             referencedColumns: ["id"]
           },
@@ -149,6 +156,13 @@ export type Database = {
           url?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "gastos_servicios_servicio_id_fkey"
+            columns: ["servicio_id"]
+            isOneToOne: false
+            referencedRelation: "resultado_por_semana_y_dia_total"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "gastos_servicios_servicio_id_fkey"
             columns: ["servicio_id"]
@@ -584,7 +598,9 @@ export type Database = {
           dia_de_semana: number | null
           fecha_carga: string | null
           fecha_entrega: string | null
+          gasto_estimado: number | null
           precio_de_servicio: number | null
+          precio_mano_de_obra: number | null
           semana: number | null
         }
         Relationships: [
@@ -596,6 +612,15 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      resultado_por_semana_y_dia_total: {
+        Row: {
+          id: string | null
+          total_mano_de_obra: number | null
+          total_por_servicio: number | null
+          total_servicio: number | null
+        }
+        Relationships: []
       }
       resultado_semanal: {
         Row: {

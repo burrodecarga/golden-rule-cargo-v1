@@ -2,6 +2,52 @@ import { error } from "console"
 import { createClient } from "./supabase/client"
 import { Database } from "@/types/db_types"
 
+export const SERVICIO_SEMANA=
+    `id,
+activo,
+bol,
+broker,
+carga,
+chofer,
+chofer_id,
+created_at,
+despachador,
+destino,
+estatus_pago,
+estatus_servicio,
+fecha_carga,
+fecha_entrega,
+forma_de_pago,
+gasto_estimado,
+id,
+info_pago,
+millas,
+num_descargas,
+observaciones,
+orden,
+origen,
+peso,
+plataforma,
+pod,
+precio_de_servicio,
+precio_mano_de_obra,
+rc,
+ruta,
+tipo_de_carga,
+vehiculo,
+vehiculo_id,
+ano,
+dia_de_semana,
+semana,
+fotos_servicios ( 
+created_at,
+fecha,
+id,
+observacion,
+servicio_id,
+ubicacion,
+url)`
+
 
 const supabase=await createClient()
 export const allServicios=async () => {
@@ -204,6 +250,111 @@ tipo,url
 
 export type GetGastosByServicioId=Awaited<ReturnType<typeof getGastosByServicioId>>
 export type GetGastosByServicioIdRow=Database["public"]["Tables"]["servicios"]["Row"]
+
+export const fetchServiciosBySemanaChofer=async (semana: number, chofer: string) => {
+    const { data, error }=await supabase.from("servicios").select(SERVICIO_SEMANA).eq('semana', semana).eq('chofer', chofer).order("semana", {
+        ascending: false,
+    })
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        console.log('GANO')
+        return data
+    }
+}
+
+export const fetchServiciosBySemanaVehiculo=async (semana: number, vehiculo: string) => {
+    const { data, error }=await supabase.from("servicios").select(SERVICIO_SEMANA).eq('semana', semana).eq('vehiculo', vehiculo).order("semana", {
+        ascending: false,
+    })
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        console.log('GANO')
+        return data
+    }
+}
+
+export const fetchServiciosBySemanaPlataforma=async (semana: number, plataforma: string) => {
+    const { data, error }=await supabase.from("servicios").select(SERVICIO_SEMANA).eq('semana', semana).eq('plataforma', plataforma).order("semana", {
+        ascending: false,
+    })
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        console.log('GANO')
+        return data
+    }
+}
+
+
+export const fetchServiciosBySemana=async (semana: number) => {
+    const { data, error }=await supabase.from("servicios").select(`(*), gastos_servicios(*),fotos_servicios(*)`).eq('semana', semana).order("semana", {
+        ascending: false,
+    })
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        console.log('GANO')
+        return data
+    }
+}
+
+export const fetchSemanasAndDay=async () => {
+    const { data, error }=await supabase.from("resultado_por_semana_y_dia").select('*')
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+export type Semanas=Awaited<ReturnType<typeof fetchSemanasAndDay>>
+export type Semana=Semanas[number]
+
+export const fetchChoferSemanas=async () => {
+    const { data, error }=await supabase.from("resultado_semanal_por_chofer").select('*')
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+export const fetchVehiculoSemanas=async () => {
+    const { data, error }=await supabase.from("resultado_semanal_por_vehiculo").select('*')
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+export type VehiculoSemanas=Awaited<ReturnType<typeof fetchVehiculoSemanas>>
+export type VehiculoSemana=VehiculoSemanas[number]
+
+export const fetchPlataformaSemanas=async () => {
+    const { data, error }=await supabase.from("resultado_semanal_por_plataforma").select('*')
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+export type PlataformaSemanas=Awaited<ReturnType<typeof fetchPlataformaSemanas>>
+export type PlataformaSemana=PlataformaSemanas[number]
+export type ChoferSemanas=Awaited<ReturnType<typeof fetchChoferSemanas>>
+//export type ChoferSemana=Plataformas[number]
+
 
 
 

@@ -5,5 +5,7 @@ export const semanaDeAno=(): number => {
     startOfYear.setDate(startOfYear.getDate()+(startOfYear.getDay()%7))
     const res: any=Number(date)-Number(startOfYear)
     return Math.round((res)/(7*24*3600*1000))+1
-
 }
+
+export const WEEKDAY=["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+

@@ -4,7 +4,7 @@ import {
   HomeIcon,
   DocumentDuplicateIcon,
 } from '@heroicons/react/24/outline'
-import { DamIcon } from 'lucide-react'
+import { DamIcon, PieChartIcon } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -14,9 +14,9 @@ const links=[
   { name: 'Home', href: '/protected', icon: HomeIcon },
   { name: 'Dasboard', href: '/protected/servicios', icon: DamIcon },
   {
-    name: 'Invoices',
-    href: '/dashboard/invoices',
-    icon: DocumentDuplicateIcon,
+    name: 'Statistics',
+    href: '/protected/estadisticas',
+    icon: PieChartIcon,
   },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
 ]
