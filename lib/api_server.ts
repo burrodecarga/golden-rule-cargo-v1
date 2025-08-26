@@ -122,3 +122,88 @@ export type Fotos_Servicios=
 
 
 
+export const uploadImagen=async (filePath: string, formData: FormData) => {
+    const { error }=await supabase.storage
+        .from("documentos")
+        .upload(filePath, formData)
+
+    if (error) throw error
+
+    const { data }=supabase.storage.from("documentos").getPublicUrl(filePath)
+    return data.publicUrl
+}
+
+export const updateServicioByBol=async (id: string, bol: string) => {
+    const { data, error }=await supabase
+        .from('servicios')
+        .update({ 'bol': bol })
+        .eq('id', id)
+        .select()
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export const updateServicioByPod=async (id: string, pod: string) => {
+    const { data, error }=await supabase
+        .from('servicios')
+        .update({ 'pod': pod })
+        .eq('id', id)
+        .select()
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+
+export const updateServicioByRc=async (id: string, rc: string) => {
+    const { data, error }=await supabase
+        .from('servicios')
+        .update({ 'rc': rc })
+        .eq('id', id)
+        .select()
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+
+export const getGastosByServicioId=async (id: string) => {
+
+    //console.log('SERVIDOR', id)
+    const { data, error }=await supabase.from("gastos_servicios").select(`
+created_at,
+fecha,
+id,
+monto,
+servicio_id,
+tipo,url
+`).eq('servicio_id', id).order("fecha", {
+        ascending: false,
+    })
+    if (error) {
+        console.log("error", error)
+
+    } else {
+        //console.log("EXITO", data)
+        return data
+    }
+}
+
+export type GetGastosByServicioId=Awaited<ReturnType<typeof getGastosByServicioId>>
+export type GetGastosByServicioIdRow=Database["public"]["Tables"]["servicios"]["Row"]
+
+
+

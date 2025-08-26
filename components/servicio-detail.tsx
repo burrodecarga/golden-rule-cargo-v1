@@ -10,7 +10,7 @@ export default async function ServicioDetail(id: { id: string }) {
 
     //console.log(id.id, servicio)
     return (
-        <Suspense >
+        <Suspense key={id.id} fallback={<p>cargando...</p>} >
             <TabsDetailServicio item={servicio} />
         </Suspense>
     )
