@@ -100,7 +100,7 @@ export function TabsDetailServicio(servicio: { item: ServicioByID }) {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button>Save changes</Button>
+
                         </CardFooter>
                     </Card>
                 </TabsContent>
@@ -161,7 +161,6 @@ export function TabsDetailServicio(servicio: { item: ServicioByID }) {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button>Save password</Button>
                         </CardFooter>
                     </Card>
                 </TabsContent>

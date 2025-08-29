@@ -367,6 +367,23 @@ export const fetchAllUsers=async () => {
     }
 }
 
+export const getProfile=async (userId: string) => {
+    const { data, error }=await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId).limit(1)
+    if (error) {
+        console.log("error", error)
+
+    } else {
+        return data
+    }
+}
+
+export type GetProfile=Awaited<ReturnType<typeof getProfile>>
+//export type GetProfile=GetProfiles[number]
+
+
 export type AllUsers=Awaited<ReturnType<typeof fetchAllUsers>>
 export type AllUser=AllUsers[number]
 

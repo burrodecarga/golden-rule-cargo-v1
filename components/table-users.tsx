@@ -1,6 +1,8 @@
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { fetchAllUsers, } from "@/lib/api_server"
 import Foto from "./foto"
+import { PenSquareIcon } from "lucide-react"
+import Link from "next/link"
 
 export default async function UsersTable() {
 
@@ -38,6 +40,11 @@ export default async function UsersTable() {
 
                   <TableCell className="uppercase text-[12px]">{d.role}</TableCell>
                   <TableCell className="uppercase text-[12px]">{d.activo===0? 'inactivo':'activo'}</TableCell>
+                  <TableCell className="flex flex-row gap-2 cursor-pointer text-blue-600 text-center">
+
+                    <Link href={
+                      `/protected/users/${d.id}`}><PenSquareIcon /></Link>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

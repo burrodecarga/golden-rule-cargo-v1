@@ -132,3 +132,24 @@ export interface ServicioNoId {
     semana: number
 }
 
+export interface ProfileProps {
+    id?: string
+    updated_at?: Date
+    username?: string
+    full_name: string
+    avatar_url?: string
+    website?: string
+    first_name: string
+    last_name: string
+    phone: string
+    birthday?: Date
+    driver_license_url?: string
+    medical_certificate_url?: string
+    social_security_url?: string
+    work_permit_url?: string
+    w_9_url?: string
+    role: string
+    activo: number
+}
+
+

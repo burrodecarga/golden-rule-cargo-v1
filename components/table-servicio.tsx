@@ -1,6 +1,8 @@
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { fetchFilteredServices } from "@/lib/api_server"
 import { formatDate } from "@fullcalendar/core/index.js"
+import { EyeDropperIcon } from "@heroicons/react/24/outline"
+import { EyeIcon, PenIcon } from "lucide-react"
 import Link from "next/link"
 
 export default async function ServicesTable({
@@ -32,17 +34,17 @@ export default async function ServicesTable({
             <TableCaption>A list of your recent services.</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Date</TableHead>
-                <TableHead className="w-[100px]">Week</TableHead>
-                <TableHead className="w-[100px]">Order</TableHead>
-                <TableHead className="w-[100px]">Platform</TableHead>
-                <TableHead className="w-[100px]">Route</TableHead>
-                <TableHead>service status</TableHead>
-                <TableHead>payment status</TableHead>
-                <TableHead>method of payment</TableHead>
-                <TableHead>driver</TableHead>
-                <TableHead>actions</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                <TableHead className=" text-sm">Date</TableHead>
+                <TableHead className=" text-sm">Week</TableHead>
+                <TableHead className=" text-sm">Order</TableHead>
+                <TableHead className=" text-sm">Platform</TableHead>
+                <TableHead className=" text-sm">Route</TableHead>
+                <TableHead className="text-sm">service status</TableHead>
+                <TableHead className="text-sm">payment status</TableHead>
+                <TableHead className="text-sm">method of payment</TableHead>
+                <TableHead className="text-sm">driver</TableHead>
+                <TableHead className="text-sm text-right">Amount</TableHead>
+                <TableHead className="text-sm">actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -57,11 +59,17 @@ export default async function ServicesTable({
                   <TableCell className="uppercase text-[10px]">{d.estatus_pago}</TableCell>
                   <TableCell className="uppercase text-[10px]">{d.forma_de_pago}</TableCell>
                   <TableCell className="uppercase text-[10px]">{d.chofer}</TableCell>
-                  <TableCell className="uppercase text-[10px] cursor-pointer text-blue-600 text-center"><Link href={{
-                    pathname: '/protected/servicios/servicio/',
-                    query: { id: d.id },
-                  }}>ir</Link></TableCell>
                   <TableCell className="text-right">{d.precio_de_servicio}</TableCell>
+                  <TableCell className="flex flex-row gap-2 cursor-pointer text-blue-600 text-center">
+                    <Link href={{
+                      pathname: '/protected/servicios/servicio/',
+                      query: { id: d.id },
+                    }}><EyeIcon /></Link>
+                    <Link href={{
+                      pathname: '/protected/servicios/servicio/edit',
+                      query: { id: d.id },
+                    }}><PenIcon /></Link>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
