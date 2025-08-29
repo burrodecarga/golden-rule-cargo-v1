@@ -9,6 +9,8 @@ export function CardImage(url: { url: string }) {
                     alt="Mountains fill image"
                     className="rounded object-cover"
                     fill
+                    width={0} height={0} sizes="100vh"
+                    priority
                 />
             </div>
         </div>

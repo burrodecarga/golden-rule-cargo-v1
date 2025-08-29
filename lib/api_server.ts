@@ -504,12 +504,9 @@ export const updateUserByWork=async (id: string, work_permit_url: string) => {
 
 export const updateVehicle=async (name: string, vehicleId: string) => {
 
-
     const { data, error }=await supabase
         .from('vehicles')
-        .update({
-            name: name,
-        })
+        .update({ name: name, })
         .eq('id', vehicleId)
         .select()
 
@@ -520,12 +517,11 @@ export const updateVehicle=async (name: string, vehicleId: string) => {
     return data
 }
 
-export const updateVehicleByDocument=async (document: string, vehicleId: string) => {
+export const updateVehicleByDocument=async (vehicleId: string, document: string) => {
+    console.log('SERVER DOC', document, vehicleId)
     const { data, error }=await supabase
         .from('vehicles')
-        .update({
-            document: document,
-        })
+        .update({ document: document, })
         .eq('id', vehicleId)
         .select()
 
@@ -536,7 +532,8 @@ export const updateVehicleByDocument=async (document: string, vehicleId: string)
     return data
 }
 
-export const updateVehicleByImage=async (image: string, vehicleId: string) => {
+export const updateVehicleByImage=async (vehicleId: string, image: string) => {
+    console.log('SERVER', image, vehicleId)
     const { data, error }=await supabase
         .from('vehicles')
         .update({

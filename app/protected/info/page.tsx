@@ -11,7 +11,7 @@ export default function UploadSreenPersonal() {
     const name=searchParams.get('name')
 
     const props=useSupabaseUpload({
-        bucketName: 'vehicles',
+        bucketName: 'vehiculos',
         path: '',
         allowedMimeTypes: ['image/*'],
         maxFiles: 2,
@@ -23,12 +23,13 @@ export default function UploadSreenPersonal() {
 
     console.log('NAME', id, name)
     if (props.isSuccess) {
-        let publicUrl='https://stxsnrianylaldkorlgy.supabase.co/storage/v1/object/public/vehicles//'+props.successes[0]
+        let publicUrl='https://stxsnrianylaldkorlgy.supabase.co/storage/v1/object/public/vehiculos//'+props.successes[0]
         if (name?.toUpperCase()=='DOCUMENT') {
 
             updateVehicleByDocument(id as string, publicUrl)
         }
         if (name?.toUpperCase()=='IMAGE') {
+
             updateVehicleByImage(id as string, publicUrl)
         }
 

@@ -16,14 +16,15 @@ import Image from 'next/image'
 import { deleteVehicle, updateVehicle } from '@/lib/api_server'
 import { redirect } from 'next/navigation'
 import { Switch } from './ui/switch'
+import { FOTO } from '@/helpers/utils'
 
-const path='https://stxsnrianylaldkorlgy.supabase.co/storage/v1/object/public/personal//'
+const path='https://stxsnrianylaldkorlgy.supabase.co/storage/v1/object/public/vehiculos//'
 export default function FormVehicle(vehicle: any) {
     const carro=vehicle.vehicle[0]
 
     const [name, setName]=useState(carro.name||'')
-    const [document, setDocument]=useState(carro.document||'')
-    const [image, setImage]=useState(carro.image||'')
+    // const [document, setDocument]=useState(carro.document||'')
+    // const [image, setImage]=useState(carro.image||'')
     const [error, setError]=useState<string|null>(null)
     const [isLoading, setIsLoading]=useState(false)
 
@@ -52,7 +53,7 @@ export default function FormVehicle(vehicle: any) {
             <Card>
                 <CardHeader>
                     <CardTitle className="text-2xl">Edit: {carro.name}</CardTitle>
-                    <CardDescription>""</CardDescription>
+                    <CardDescription></CardDescription>
 
                 </CardHeader>
                 <CardContent>
@@ -101,17 +102,17 @@ export default function FormVehicle(vehicle: any) {
                         <Label >Document {carro.name}</Label>
                         <Link href={{
                             pathname: '/protected/info',
-                            query: { name: 'document', id: carro.id },
+                            query: { name: 'DOCUMENT', id: carro.id },
                         }}>
-                            <Image priority src={carro.document!} width="0" height="0" sizes="100vw" alt={carro.vehiclename} className="rounded-md object-cover w-full h-auto" /></Link>
+                            <Image priority src={carro.document? carro.document:FOTO} width="0" height="0" sizes="100vw" alt="document" className="rounded-md object-cover w-full h-auto" /></Link>
                     </div>
                     <div className="grid gap-3">
                         <Label>Image</Label>
                         <Link href={{
                             pathname: '/protected/info',
-                            query: { name: 'image', id: carro.id },
+                            query: { name: 'IMAGE', id: carro.id },
                         }}>
-                            <Image priority src={carro.image!} width="0" height="0" sizes="100vw" alt="Image" className="rounded-md object-cover w-full h-auto" /></Link>
+                            <Image priority src={carro.image? carro.image:FOTO} width="0" height="0" sizes="100vw" alt="image" className="rounded-md object-cover w-full h-auto" /></Link>
 
                     </div>
                 </CardContent>
