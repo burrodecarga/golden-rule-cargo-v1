@@ -3,6 +3,12 @@ import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, Tabl
 
 import React from 'react'
 import Foto from './foto'
+import Image from 'next/image'
+import { CardImage } from './card-image'
+import { Edit3Icon } from 'lucide-react'
+import { FOTO } from '@/helpers/utils'
+import Link from 'next/link'
+import { PencilSquareIcon } from '@heroicons/react/24/outline'
 
 export default async function VehiclesList() {
     const vehicles=await fetchAllVehicles()
@@ -21,16 +27,18 @@ export default async function VehiclesList() {
                                 <TableHead className="">Image</TableHead>
                                 <TableHead className="">Vehicle</TableHead>
                                 <TableHead className="">Document</TableHead>
-
+                                <TableHead className="">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {vehicles&&vehicles.map((d) => (
                                 <TableRow key={d.id}>
-                                    <TableCell className="uppercase text-[12px]"><Foto uri={d.image} /></TableCell>
+
+                                    <TableCell className="uppercase text-[12px]"><CardImage url={d.image? d.image!:FOTO} /></TableCell>
                                     <TableCell className="uppercase text-[12px]">{d.name}</TableCell>
                                     <TableCell className="uppercase text-[12px]"><Foto uri={d.document} /></TableCell>
-
+                                    <TableCell><Link href={
+                                        `/protected/vehicles/${d.id}`}><PencilSquareIcon /></Link></TableCell>
 
                                 </TableRow>
                             ))}

@@ -388,4 +388,194 @@ export type AllUsers=Awaited<ReturnType<typeof fetchAllUsers>>
 export type AllUser=AllUsers[number]
 
 
+export const updateProfile=async (first_name: string, last_name: string, phone: string, birthday: string, role: string, active: boolean, profileId: string) => {
+
+
+    const { data, error }=await supabase
+        .from('profiles')
+        .update({
+            full_name: first_name+' '+last_name,
+            first_name: first_name,
+            last_name: last_name,
+            phone: phone,
+            birthday: birthday+' 00:00:00+00',
+            role: role,
+            activo: active? 1:0,
+        })
+        .eq('id', profileId)
+        .select()
+
+    if (error) {
+        console.log(error.message)
+        throw new Error("Update Error"+error.message)
+    }
+    return data
+}
+
+
+export const deleteUser=async (id: string) => {
+
+    const { error }=await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', id)
+
+}
+
+export const updateUserByLicense=async (id: string, driver_license_url: string) => {
+    console.log('SERVER', driver_license_url, id)
+    const { data, error }=await supabase
+        .from('profiles')
+        .update({ driver_license_url: driver_license_url })
+        .eq('id', id)
+        .select()
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export const updateUserByMedical=async (id: string, medical_certificate_url: string) => {
+    console.log('SERVER', medical_certificate_url, id)
+    const { data, error }=await supabase
+        .from('profiles')
+        .update({ medical_certificate_url: medical_certificate_url })
+        .eq('id', id)
+        .select()
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export const updateUserBySocial=async (id: string, social_security_url: string) => {
+    console.log('SERVER', social_security_url, id)
+    const { data, error }=await supabase
+        .from('profiles')
+        .update({ social_security_url: social_security_url })
+        .eq('id', id)
+        .select()
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export const updateUserByW=async (id: string, w_9_url: string) => {
+    console.log('SERVER', w_9_url, id)
+    const { data, error }=await supabase
+        .from('profiles')
+        .update({ w_9_url: w_9_url })
+        .eq('id', id)
+        .select()
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export const updateUserByWork=async (id: string, work_permit_url: string) => {
+    console.log('SERVER', work_permit_url, id)
+    const { data, error }=await supabase
+        .from('profiles')
+        .update({ work_permit_url: work_permit_url })
+        .eq('id', id)
+        .select()
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export const updateVehicle=async (name: string, vehicleId: string) => {
+
+
+    const { data, error }=await supabase
+        .from('vehicles')
+        .update({
+            name: name,
+        })
+        .eq('id', vehicleId)
+        .select()
+
+    if (error) {
+        console.log(error.message)
+        throw new Error("Update Error"+error.message)
+    }
+    return data
+}
+
+export const updateVehicleByDocument=async (document: string, vehicleId: string) => {
+    const { data, error }=await supabase
+        .from('vehicles')
+        .update({
+            document: document,
+        })
+        .eq('id', vehicleId)
+        .select()
+
+    if (error) {
+        console.log(error.message)
+        throw new Error("Update Error"+error.message)
+    }
+    return data
+}
+
+export const updateVehicleByImage=async (image: string, vehicleId: string) => {
+    const { data, error }=await supabase
+        .from('vehicles')
+        .update({
+            image: image,
+        })
+        .eq('id', vehicleId)
+        .select()
+
+    if (error) {
+        console.log(error.message)
+        throw new Error("Update Error"+error.message)
+    }
+    return data
+}
+
+
+
+
+export const deleteVehicle=async (id: string) => {
+
+    const { error }=await supabase
+        .from('vehicles')
+        .delete()
+        .eq('id', id)
+
+}
+
+export const getVehicle=async (vehicleId: string) => {
+    const { data, error }=await supabase
+        .from("vehicles")
+        .select("*")
+        .eq("id", vehicleId).limit(1)
+    if (error) {
+        console.log("error", error)
+
+    } else {
+        return data
+    }
+}
+
+
 

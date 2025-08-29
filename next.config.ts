@@ -25,7 +25,13 @@ const nextConfig: NextConfig={
       new URL('https://localhost:3000/**'),
       new URL('https://supabase.com/**'),
       new URL('https://stxsnrianylaldkorlgy.supabase.co/**'),
+      new URL('https://stxsnrianylaldkorlgy.supabase.co/**/**'),
+      new URL('https://stxsnrianylaldkorlgy.supabase.co/storage/v1/object/public/**'),
       new URL('https://stxsnrianylaldkorlgy.supabase.co/storage/v1/object/public/documentos'),
+      new URL('https://stxsnrianylaldkorlgy.supabase.co/storage/v1/object/public/personal'),
+      new URL('https://stxsnrianylaldkorlgy.supabase.co/storage/v1/object/public/vehiculos'),
+
+
     ],
   },
 

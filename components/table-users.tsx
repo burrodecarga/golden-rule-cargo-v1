@@ -1,12 +1,17 @@
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { fetchAllUsers, } from "@/lib/api_server"
+import { deleteUser, fetchAllUsers, } from "@/lib/api_server"
 import Foto from "./foto"
-import { PenSquareIcon } from "lucide-react"
+import { EraserIcon, PenSquareIcon } from "lucide-react"
 import Link from "next/link"
+import { Button } from "./ui/button"
 
 export default async function UsersTable() {
 
   const users=await fetchAllUsers()
+
+  const eliminar=(id: string) => {
+    const result=deleteUser(id)
+  }
 
 
 

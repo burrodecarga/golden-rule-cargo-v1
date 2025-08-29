@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Card,
     CardContent,
@@ -13,31 +13,63 @@ import { Input } from './ui/input'
 import { Button } from './ui/button'
 import Link from 'next/link'
 import Image from 'next/image'
+import { deleteUser, updateProfile } from '@/lib/api_server'
+import { redirect } from 'next/navigation'
+import { Switch } from './ui/switch'
 
+const path='https://stxsnrianylaldkorlgy.supabase.co/storage/v1/object/public/personal//'
 export default function FormUser(user: any) {
-
     const profile=user.user[0]
-    const [first_name, setFirst_name]=useState("")
-    const [last_name, setLast_name]=useState("")
-    const [phone, setPhone]=useState("")
-    const [birtdate, setBirtdate]=useState("")
-    const [role, setRole]=useState('chofer')
-    const [email, setEmail]=useState("")
-    const [password, setPassword]=useState("")
+
+    const [first_name, setFirst_name]=useState(profile.first_name||'')
+    const [last_name, setLast_name]=useState(profile.last_name||'')
+    const [phone, setPhone]=useState(profile.phone||'')
+    const [birthday, setBirtdate]=useState(profile.birthday||"")
+    const [role, setRole]=useState(profile.role)
+    const [active, setActive]=useState(profile.activo||0)
+    const [checked, setChecked]=useState(profile.activo===1)
     const [error, setError]=useState<string|null>(null)
     const [isLoading, setIsLoading]=useState(false)
 
 
-    console.log(profile)
-    const handleSubmit=() => {
-
+    //console.log(profile.birthday)
+    const handleSubmit=async (e: any) => {
+        e.preventDefault()
+        let userId=profile.id
+        setIsLoading(true)
+        const res=await updateProfile(first_name, last_name, phone, birthday, role, active, userId)
+        setIsLoading(false)
+        redirect(`/protected/users/`)
     }
+
+    const handleDelete=async () => {
+        let userId=profile.id
+        setIsLoading(true)
+        await deleteUser(userId)
+        setIsLoading(false)
+        redirect(`/protected/users/`)
+    }
+
+    useEffect(() => {
+        if (checked) {
+            setActive(1)
+        } else {
+            setActive(0)
+        }
+    }, [checked])
     return (
         <div className="">
             <Card>
                 <CardHeader>
                     <CardTitle className="text-2xl">Edit: {profile.full_name}</CardTitle>
                     <CardDescription>Rol: {profile.role}</CardDescription>
+                    <div className="flex items-center space-x-2">
+                        <Switch id="airplane-mode"
+                            checked={checked}
+                            onCheckedChange={() => setChecked(!checked)}
+                        />
+                        <Label htmlFor="airplane-mode">{checked? 'Active':'No active'}</Label>
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit}>
@@ -82,15 +114,15 @@ export default function FormUser(user: any) {
                                     />
                                 </div>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="birtdate">birtdate</Label>
+                                    <Label htmlFor="birthday">birthday</Label>
                                     <Input
-                                        name="birtdate"
+                                        name="birthday"
                                         autoComplete='false'
-                                        id="birtdate"
+                                        id="birthday"
                                         type="text"
-                                        placeholder="dd-mm-yyyy"
+                                        placeholder="yyyy-mm-dd"
                                         required
-                                        value={birtdate}
+                                        value={birthday}
                                         onChange={(e) => setBirtdate(e.target.value)}
                                     />
                                 </div>
@@ -102,38 +134,18 @@ export default function FormUser(user: any) {
                                     </select>
                                 </div>
                             </div>
-                            <div className="flex flex-row gap-6">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="email" >Email</Label>
-                                    <Input
-                                        name="email"
-                                        autoComplete='false'
-                                        id="email"
-                                        type="email"
-                                        placeholder="m@example.com"
-                                        required
-                                        value={profile.email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <div className="flex items-center">
-                                        <Label htmlFor="password">Password</Label>
-                                    </div>
-                                    <Input
-                                        id="password"
-                                        type="password"
-                                        required
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                    />
-                                </div>
-                            </div>
+
 
                             {error&&<p className="text-sm text-red-500">{error}</p>}
-                            <Button type="submit" className="w-full" disabled={isLoading}>
-                                {isLoading? "Creating an account...":"Sign up"}
-                            </Button>
+                            <div className="flex gap-3 w-full">
+
+                                <Button type="submit" className="" disabled={isLoading}>
+                                    {isLoading? "Updating an account...":"Update"}
+                                </Button>
+                                <Button type="button" variant={'destructive'} className="" disabled={isLoading} onClick={handleDelete}>
+                                    {isLoading? "Deleting an account...":"Delete"}
+                                </Button>
+                            </div>
                         </div>
 
                     </form>
@@ -151,9 +163,9 @@ export default function FormUser(user: any) {
                         <Label >Drive License{profile.drive_license_url}</Label>
                         <Link href={{
                             pathname: '/protected/legal',
-                            query: { name: 'drive_license_url', id: profile.id },
+                            query: { name: 'driver_license_url', id: profile.id },
                         }}>
-                            <Image src={profile.driver_license_url!} width="0" height="0" sizes="100vw" alt={profile.username} className="rounded-md object-cover w-full h-auto" /></Link>
+                            <Image priority src={profile.driver_license_url!} width="0" height="0" sizes="100vw" alt={profile.username} className="rounded-md object-cover w-full h-auto" /></Link>
                     </div>
                     <div className="grid gap-3">
                         <Label>Medical Certificate</Label>
@@ -161,7 +173,7 @@ export default function FormUser(user: any) {
                             pathname: '/protected/legal',
                             query: { name: 'medical_certificate_url', id: profile.id },
                         }}>
-                            <Image src={profile.medical_certificate_url!} width="0" height="0" sizes="100vw" alt="Image" className="rounded-md object-cover w-full h-auto" /></Link>
+                            <Image priority src={profile.medical_certificate_url!} width="0" height="0" sizes="100vw" alt="Image" className="rounded-md object-cover w-full h-auto" /></Link>
 
                     </div>
                     <div className="grid gap-3">
@@ -170,31 +182,30 @@ export default function FormUser(user: any) {
                             pathname: '/protected/legal',
                             query: { name: 'social_security_url', id: profile.id! },
                         }}>
-                            <Image src={profile.social_security_url!} width="0" height="0" sizes="100vw" alt="Image" className="rounded-md object-cover w-full h-auto" /></Link>
+                            <Image priority src={profile.social_security_url!} width="0" height="0" sizes="100vw" alt="Image" className="rounded-md object-cover w-full h-auto" /></Link>
 
                     </div>
 
                     <div className="grid gap-3">
-                        <Label>Social Security</Label>
+                        <Label>Work Permit</Label>
                         <Link href={{
                             pathname: '/protected/legal',
                             query: { name: 'work_permit_url', id: profile.id! },
                         }}>
-                            <Image src={profile.work_permit_url!} width="0" height="0" sizes="100vw" alt="Image" className="rounded-md object-cover w-full h-auto" /></Link>
+                            <Image priority src={profile.work_permit_url!} width="0" height="0" sizes="100vw" alt="Image" className="rounded-md object-cover w-full h-auto" /></Link>
 
                     </div>
                     <div className="grid gap-3">
-                        <Label>Social Security</Label>
+                        <Label>W-9</Label>
                         <Link href={{
                             pathname: '/protected/legal',
                             query: { name: 'w_9_url', id: profile.id! },
                         }}>
-                            <Image src={profile.w_9_url!} width="0" height="0" sizes="100vw" alt="Image" className="rounded-md object-cover w-full h-auto" /></Link>
+                            <Image priority src={profile.w_9_url!} width="0" height="0" sizes="100vw" alt="Image" className="rounded-md object-cover w-full h-auto" /></Link>
 
                     </div>
                 </CardContent>
                 <CardFooter>
-
                 </CardFooter>
             </Card>
         </div>

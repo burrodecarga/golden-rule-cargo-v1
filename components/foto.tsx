@@ -5,7 +5,7 @@ interface AvatarProps {
   size?: number
 }
 
-export default function Foto({ uri, size=32 }: AvatarProps) {
+export default function Foto({ uri, size=48 }: AvatarProps) {
   const styles={ height: size, width: size, borderRadius: size/2 }
   if (uri)
     return (
