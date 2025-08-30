@@ -26,6 +26,24 @@ export const allServiciosNoPay=async () => {
     }
 }
 
+export const getServiciosByChofer=async (choferId: string) => {
+
+    const { data, error }=await superSupabase
+        .from("servicios")
+        .select("*")
+        .eq("chofer_id", choferId)
+        .order("start", {
+            ascending: true
+        })
+    if (error) {
+        console.log(error.message)
+        return []
+    } else {
+        return data
+    }
+}
+
+
 export type FetchServiciosQuery=QueryData<typeof allServicios>
 export type FetchServicios=Awaited<ReturnType<typeof allServicios>>
 export type DBServicio=Database["public"]["Tables"]["servicios"]["Row"]
