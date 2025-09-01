@@ -51,7 +51,7 @@ export default async function ChoferID({
             servicio?.position!==0
             ? ""
             :"hidden"
-
+    const expense=servicio?.position!==3? "":"hidden"
     return (
         <Card className='w-full max-w-7xl'>
             <CardHeader>
@@ -61,7 +61,7 @@ export default async function ChoferID({
                 <CardDescription>
                     information regarding transportation
                     <div className='grid grid-cols-2'>
-                        <div>
+                        <>
                             <p>
                                 <span className='font-bold'>Date:</span>
                                 {servicio?.fecha_carga}
@@ -90,8 +90,8 @@ export default async function ChoferID({
                                 <span className='font-bold'>pay:</span>
                                 {servicio?.forma_de_pago}
                             </p>
-                        </div>
-                        <div>{servicio&&<FormGasto id={servicio?.id!} />}</div>
+                        </>
+                        <div className={expense}>{servicio&&<FormGasto id={servicio?.id!} />}</div>
                     </div>
                 </CardDescription>
             </CardHeader>

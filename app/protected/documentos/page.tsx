@@ -3,14 +3,11 @@
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/components/dropzone'
 import { useSupabaseUpload } from '@/hooks/use-supabase-upload'
 import { updateServicioByBol, updateServicioByPod, updateServicioByRc } from '@/lib/api_server'
-import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { use } from 'react'
 
 export default function UploadSreen({ params }: { params: Promise<{ name: string, id: string }> }) {
     const { name, id }=use(params)
-
-
 
     const props=useSupabaseUpload({
         bucketName: 'documentos',

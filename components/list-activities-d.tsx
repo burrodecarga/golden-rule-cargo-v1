@@ -15,7 +15,8 @@ export default function ListActivitiesD({ activities, filter }: { activities: Fe
                     <div className="flex flex-col w-full" key={a.id+a.orden} >
                         <Link href={`/protected/chofer/${a.id}`}>
                             <Button className='px-4 py-2 bg-blue-500 w-full mb-3'>
-                                {a.ruta}-{a.chofer_id}-{a.position}
+                                Route: {a.ruta} - Price: {a.precio_de_servicio} $
+
                             </Button>
                         </Link>
 
