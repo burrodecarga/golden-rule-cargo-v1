@@ -4,8 +4,16 @@ import { ThemeSwitcher } from "@/components/theme-switcher"
 import { hasEnvVars } from "@/lib/utils"
 import Link from "next/link"
 import Activities from "@/components/activities"
+import { createClient } from "@/lib/server"
+import { redirect } from "next/navigation"
 
-export default function Home() {
+export default async function Home() {
+  const supabase=createClient()
+  const { data, error }=await (await supabase).auth.getUser()
+  if (error||!data?.user) {
+    redirect('/login')
+  }
+
 
   return (
     <main className="min-h-screen flex flex-col items-center">
@@ -24,6 +32,7 @@ export default function Home() {
         <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
           <main className="flex-1 flex flex-col gap-6 px-4">
             <h2 className="font-medium text-xl mb-4">Next steps</h2>
+
             <Activities />
             <Link href="/protected">Go...</Link>
           </main>

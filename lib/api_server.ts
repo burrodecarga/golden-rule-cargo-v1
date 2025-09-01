@@ -648,3 +648,7 @@ export type GetAllGastosByServicio=AllUsers[number]
 
 
 
+export const isChofer=async () => {
+    const { data }=await supabase.from("user").select("*").single()
+    return data
+}

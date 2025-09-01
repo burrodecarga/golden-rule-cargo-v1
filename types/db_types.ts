@@ -564,6 +564,24 @@ export type Database = {
         }
         Relationships: []
       }
+      user: {
+        Row: {
+          created_at: string
+          id: string
+          role: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: string | null
+        }
+        Relationships: []
+      }
       vehicles: {
         Row: {
           created_at: string

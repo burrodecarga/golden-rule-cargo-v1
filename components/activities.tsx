@@ -6,8 +6,16 @@ import ListActivities from './list-activities'
 import ListActivitiesP from './list-activities-p'
 import ListActivitiesD from './list-activities-d'
 import ListActivitiesT from './list-activities-t'
+import { isChofer } from '@/lib/api_server'
+import { redirect } from 'next/navigation'
 
 export default async function Activities() {
+
+    // const esChofer=await isChofer()
+
+    // if (!esChofer) {
+    //     redirect('/')
+    // }
 
     const supabase=await createClient()
     // You can also use getUser() which will be slower.
