@@ -3,7 +3,7 @@ import React from 'react'
 import { Button } from './ui/button'
 import Link from 'next/link'
 
-export default function ListActivities({ activities, filter }: { activities: FetchServicios, filter: number }) {
+export default function ListActivitiesD({ activities, filter }: { activities: FetchServicios, filter: number }) {
 
 
 

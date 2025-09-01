@@ -672,6 +672,28 @@ export type Database = {
         }
         Relationships: []
       }
+      total_gastos_by_servicio: {
+        Row: {
+          servicio_id: string | null
+          total_gasto: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gastos_servicios_servicio_id_fkey"
+            columns: ["servicio_id"]
+            isOneToOne: false
+            referencedRelation: "resultado_por_semana_y_dia_total"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gastos_servicios_servicio_id_fkey"
+            columns: ["servicio_id"]
+            isOneToOne: false
+            referencedRelation: "servicios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never

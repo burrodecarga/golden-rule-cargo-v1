@@ -43,6 +43,24 @@ export const getServiciosByChofer=async (choferId: string) => {
     }
 }
 
+export const getServiciosProgramadoByChofer=async (choferId: string, position: number) => {
+
+    const { data, error }=await superSupabase
+        .from("servicios")
+        .select("*")
+        .eq("chofer_id", choferId)
+        .eq("position", position)
+        .order("start", {
+            ascending: true
+        })
+    if (error) {
+        console.log(error.message)
+        return []
+    } else {
+        return data
+    }
+}
+
 
 export type FetchServiciosQuery=QueryData<typeof allServicios>
 export type FetchServicios=Awaited<ReturnType<typeof allServicios>>

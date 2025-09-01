@@ -85,6 +85,7 @@ export interface TypeServicio {
     peso?: number|null
     plataforma?: string|null
     pod?: string|null
+    position?: number|null
     precio_de_servicio?: number|null
     precio_mano_de_obra?: number|null
     rc?: string|null
@@ -130,6 +131,7 @@ export interface ServicioNoId {
     dia: number
     dia_de_semana: number
     semana: number
+
 }
 
 export interface ProfileProps {

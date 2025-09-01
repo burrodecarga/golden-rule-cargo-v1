@@ -132,6 +132,7 @@ vehiculo_id,
 ano,
 dia_de_semana,
 semana,
+position,
 fotos_servicios ( 
 created_at,
 fecha,
@@ -178,6 +179,22 @@ export const uploadImagen=async (filePath: string, formData: FormData) => {
     const { data }=supabase.storage.from("documentos").getPublicUrl(filePath)
     return data.publicUrl
 }
+
+export const updateServicioByMonto=async (id: string, monto: number) => {
+    const { data, error }=await supabase
+        .from('servicios')
+        .update({ 'gasto_estimado': monto })
+        .eq('id', id)
+        .select()
+
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
 
 export const updateServicioByBol=async (id: string, bol: string) => {
     const { data, error }=await supabase
@@ -573,6 +590,61 @@ export const getVehicle=async (vehicleId: string) => {
         return data
     }
 }
+
+export const addGastosByServicioId=async (fecha: string, tipo: string, monto: number, id: string) => {
+
+    //console.log('SERVIDOR', id)
+    const { data, error }=await supabase.from("gastos_servicios").insert({
+        'fecha': fecha,
+        'tipo': tipo,
+        'monto': monto,
+        'servicio_id': id
+    })
+        .order("fecha", {
+            ascending: false,
+        }).select()
+    if (error) {
+        console.log("error", error)
+
+    } else {
+        //console.log("EXITO", data)
+        return data
+    }
+}
+
+export const updateGastosByServicioId=async (fecha: string, tipo: string, monto: number, id: string) => {
+
+    //console.log('SERVIDOR', id)
+    const { data, error }=await supabase.from("gastos_servicios").update({
+        'fecha': fecha,
+        'tipo': tipo,
+        'monto': monto
+    }
+    ).eq('servicio_id', id).order("fecha", {
+        ascending: false,
+    })
+    if (error) {
+        console.log("error", error)
+
+    } else {
+        //console.log("EXITO", data)
+        return data
+    }
+}
+
+export const getAllGastosByServicio=async () => {
+    const { data, error }=await supabase.from("total_gastos_by_servicio").select('*')
+    if (error) {
+        console.log("error", error)
+        return []
+    } else {
+        return data
+    }
+}
+
+export type GetAllGastosByServicios=Awaited<ReturnType<typeof getAllGastosByServicio>>
+export type GetAllGastosByServicio=AllUsers[number]
+
 
 
 

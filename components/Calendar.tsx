@@ -15,7 +15,6 @@ import interactionPlugin from "@fullcalendar/interaction"
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog"
@@ -25,12 +24,11 @@ import { URL_FOTO_DEF } from "@/const/Images"
 import { semanaDeAno } from "@/const/helper"
 import { ServicioNoId } from "@/types/util_types"
 import {
-  allServiciosNoPay,
+  allServicios,
   fetchAllChoferes,
   fetchAllPlataformas,
   fetchAllVehicles,
   FetchChoferes,
-  FetchChoferesQuery,
   FetchPlataformas,
   FetchServiciosQuery,
   FetchVehicles,
@@ -131,7 +129,7 @@ const Calendar: React.FC=() => {
     })
 
   const getNewCurrentsEvents=async () => {
-    const result=await allServiciosNoPay()
+    const result=await allServicios()
     setNewCurrentEvents(result as FetchServiciosQuery)
   }
 
