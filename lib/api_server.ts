@@ -388,7 +388,7 @@ export const getProfile=async (userId: string) => {
     const { data, error }=await supabase
         .from("profiles")
         .select("*")
-        .eq("id", userId).limit(1)
+        .eq("id", userId).single()
     if (error) {
         console.log("error", error)
 
@@ -648,7 +648,3 @@ export type GetAllGastosByServicio=AllUsers[number]
 
 
 
-export const isChofer=async () => {
-    const { data }=await supabase.from("user").select("*").single()
-    return data
-}

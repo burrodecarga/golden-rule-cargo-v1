@@ -3,13 +3,13 @@
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/components/dropzone'
 import { useSupabaseUpload } from '@/hooks/use-supabase-upload'
 import { updateUserByLicense, updateUserByMedical, updateUserBySocial, updateUserByW, updateUserByWork } from '@/lib/api_server'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter, } from 'next/navigation'
+import { Suspense } from 'react'
 
 export default function UploadSreenPersonal() {
-    const searchParams=useSearchParams()
-    const id=searchParams.get('id')
-    const name=searchParams.get('name')
-
+    const params=useParams<{ id: string; name: string }>()
+    const id=params.id
+    const name=params.name
     const props=useSupabaseUpload({
         bucketName: 'personal',
         path: '',
@@ -49,15 +49,17 @@ export default function UploadSreenPersonal() {
     }
 
     return (
-        <div className="w-[500px]">
-            <p className='text-gray-500 uppercase'>select image {name}</p>
+        <Suspense>
+            <div className="w-[500px]">
+                <p className='text-gray-500 uppercase'>select image {name}</p>
 
-            <Dropzone {...props}>
-                <DropzoneEmptyState />
-                <DropzoneContent />
-            </Dropzone>
-            <button onClick={() => router.back()}>Cancel</button>
-        </div>
+                <Dropzone {...props}>
+                    <DropzoneEmptyState />
+                    <DropzoneContent />
+                </Dropzone>
+                <button onClick={() => router.back()}>Cancel</button>
+            </div>
+        </Suspense>
     )
 }
 

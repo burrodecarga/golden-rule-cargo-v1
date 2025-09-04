@@ -2,14 +2,13 @@
 
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/components/dropzone'
 import { useSupabaseUpload } from '@/hooks/use-supabase-upload'
-import { updateUserByLicense, updateUserByMedical, updateUserBySocial, updateUserByW, updateUserByWork, updateVehicleByDocument, updateVehicleByImage } from '@/lib/api_server'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { updateVehicleByDocument, updateVehicleByImage } from '@/lib/api_server'
+import { useParams, useRouter, } from 'next/navigation'
 
 export default function UploadSreenPersonal() {
-    const searchParams=useSearchParams()
-    const id=searchParams.get('id')
-    const name=searchParams.get('name')
-
+    const params=useParams<{ id: string; name: string }>()
+    const id=params.id
+    const name=params.name
     const props=useSupabaseUpload({
         bucketName: 'vehiculos',
         path: '',
@@ -42,7 +41,6 @@ export default function UploadSreenPersonal() {
     return (
         <div className="w-[500px]">
             <p className='text-gray-500 uppercase'>select image {name}</p>
-
             <Dropzone {...props}>
                 <DropzoneEmptyState />
                 <DropzoneContent />

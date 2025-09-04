@@ -1,13 +1,10 @@
-import { getServiciosByChofer, getServiciosProgramadoByChofer } from '@/lib/api'
+import { getServiciosProgramadoByChofer } from '@/lib/api'
 import { createClient } from '@/lib/server'
 import React, { Suspense } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import ListActivities from './list-activities'
 import ListActivitiesP from './list-activities-p'
 import ListActivitiesD from './list-activities-d'
 import ListActivitiesT from './list-activities-t'
-import { isChofer } from '@/lib/api_server'
-import { redirect } from 'next/navigation'
 
 export default async function Activities() {
 

@@ -6,6 +6,7 @@ import Link from "next/link"
 import Activities from "@/components/activities"
 import { createClient } from "@/lib/server"
 import { redirect } from "next/navigation"
+import { requireUser } from "@/hooks/requireUser"
 
 export default async function Home() {
   const supabase=createClient()
