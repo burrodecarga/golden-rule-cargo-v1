@@ -12,7 +12,7 @@ export default async function Home() {
   const supabase=createClient()
   const { data, error }=await (await supabase).auth.getUser()
   if (error||!data?.user) {
-    redirect('/login')
+    redirect('/auth/login')
   }
 
 
