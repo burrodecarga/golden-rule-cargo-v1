@@ -26,7 +26,7 @@ export default async function ProtectedLayout({
         <div className="w-full flex-none md:w-60">
           <SideNav role={profile.role} />
         </div>
-        <div className="flex-grow p-0 md:overflow-y-auto md:p-0">
+        <div className="flex-grow p-4 md:overflow-y-auto md:p-6">
           {children}
         </div>
 

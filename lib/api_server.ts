@@ -83,6 +83,21 @@ export const fetchFilteredServices=async (query: string, page: number) => {
     return servicios
 }
 
+export const fetchFilteredServicesById=async (id: string, query: string, page: number) => {
+    const { from, to }=getFromTo(page)
+    const { data: servicios, error }=await supabase
+        .from('servicios')
+        .select('*')
+        .or(`orden.ilike.${'%'+query+'%'},plataforma.ilike.${'%'+query+'%'},estatus_pago.ilike.${'%'+query+'%'},chofer.ilike.${'%'+query+'%'},forma_de_pago.ilike.${'%'+query+'%'},ruta.ilike.${'%'+query+'%'}`).eq('chofer_id', id)
+
+        .order("start", {
+            ascending: false
+        })
+    console.log('SEVER', servicios)
+    return servicios
+}
+
+
 
 export const fetchServicesTotalPages=async (query: string, page: number) => {
     const result=supabase

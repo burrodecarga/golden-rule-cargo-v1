@@ -14,7 +14,7 @@ export default async function EmployesRoute() {
 
     const serviciosByChofer=await getServiciosByChofer(data.user.id)
 
-    console.log('SERVICIOS DEL CHOFER', serviciosByChofer)
+    //console.log('SERVICIOS DEL CHOFER', serviciosByChofer)
 
     return (
         <ListActivities activities={serviciosByChofer} filter={3} />

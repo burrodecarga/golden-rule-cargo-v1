@@ -22,7 +22,8 @@ const links=[
   },
   { role: 'admin', name: 'Users', href: '/protected/admin/users', icon: UserGroupIcon },
   { role: 'admin', name: 'Vehicles', href: '/protected/admin/vehicles', icon: TruckIcon },
-  { role: 'chofer', name: 'Vehicles', href: '/protected/admin/vehicles', icon: TruckIcon },
+  { role: 'chofer', name: 'Home', href: '/protected', icon: HomeIcon },
+  { role: 'chofer', name: 'Services', href: '/protected/employes/services', icon: TruckIcon },
 
 ]
 

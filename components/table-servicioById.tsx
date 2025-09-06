@@ -1,14 +1,15 @@
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { fetchFilteredServices } from "@/lib/api_server"
+import { fetchFilteredServicesById } from "@/lib/api_server"
 import { formatDate } from "@fullcalendar/core/index.js"
-import { EyeDropperIcon } from "@heroicons/react/24/outline"
 import { EyeIcon, PenIcon } from "lucide-react"
 import Link from "next/link"
 
-export default async function ServicesTable({
+export default async function ServicesTableById({
+  id,
   query,
   currentPage,
 }: {
+  id: string
   query: string
   currentPage: number
 }) {
@@ -16,7 +17,7 @@ export default async function ServicesTable({
   let total=0
 
 
-  const datos=await fetchFilteredServices(query, currentPage)
+  const datos=await fetchFilteredServicesById(id, query, currentPage)
   if (datos) {
     totalArray=datos.map((a) => Number(a.precio_de_servicio))
     total=totalArray.reduce((a, b) => a+b, 0)
