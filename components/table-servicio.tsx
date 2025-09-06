@@ -62,11 +62,11 @@ export default async function ServicesTable({
                   <TableCell className="text-right">{d.precio_de_servicio}</TableCell>
                   <TableCell className="flex flex-row gap-2 cursor-pointer text-blue-600 text-center">
                     <Link href={{
-                      pathname: '/protected/servicios/servicio/',
+                      pathname: '/protected/admin/servicios/servicio/',
                       query: { id: d.id },
                     }}><EyeIcon /></Link>
                     <Link href={{
-                      pathname: '/protected/servicios/servicio/edit',
+                      pathname: '/protected/admin/servicios/servicio/edit',
                       query: { id: d.id },
                     }}><PenIcon /></Link>
                   </TableCell>

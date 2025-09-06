@@ -36,7 +36,7 @@ export default function FormVehicle(vehicle: any) {
         setIsLoading(true)
         const res=await updateVehicle(name, vehicleId)
         setIsLoading(false)
-        redirect(`/protected/vehicles/`)
+        redirect(`/protected/admin/vehicles/`)
     }
 
     const handleDelete=async () => {
@@ -44,7 +44,7 @@ export default function FormVehicle(vehicle: any) {
         setIsLoading(true)
         await deleteVehicle(vehicleId)
         setIsLoading(false)
-        redirect(`/protected/vehicles/`)
+        redirect(`/protected/admin/vehicles/`)
     }
 
 

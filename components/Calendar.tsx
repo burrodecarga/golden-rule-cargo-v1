@@ -36,6 +36,7 @@ import {
 } from "@/lib/api"
 import { DialogDescription } from "@radix-ui/react-dialog"
 
+
 const Calendar: React.FC=() => {
   const [currentEvents, setCurrentEvents]=useState<EventApi[]>([])
   const [newCurrentEvents, setNewCurrentEvents]=useState()
@@ -61,7 +62,7 @@ const Calendar: React.FC=() => {
     bol: URL_FOTO_DEF,
     broker: "",
     carga: "",
-    chofer: "",
+    chofer: undefined,
     chofer_id: "",
     despachador: "",
     destino: "",
@@ -78,14 +79,14 @@ const Calendar: React.FC=() => {
     orden: "",
     origen: "",
     peso: 0,
-    plataforma: "",
+    plataforma: undefined,
     pod: URL_FOTO_DEF,
     precio_de_servicio: 0,
     precio_mano_de_obra: 0,
     rc: URL_FOTO_DEF,
     ruta: "",
     tipo_de_carga: "",
-    vehiculo: "",
+    vehiculo: undefined,
     vehiculo_id: "",
     dia: hoy.getDate(),
     ano: hoy.getFullYear(),
@@ -177,7 +178,7 @@ const Calendar: React.FC=() => {
     if (typeof window!=="undefined") {
       localStorage.setItem("events", JSON.stringify(currentEvents))
     }
-  }, [currentEvents])
+  }, [currentEvents, cambio])
 
   const handleDateClick=(selected: DateSelectArg) => {
     setSelectedDate(selected)
@@ -196,7 +197,7 @@ const Calendar: React.FC=() => {
   }
 
   const handleEventClick=(selected: EventClickArg) => {
-    const ruta=`/protected/servicios/servicio/?${selected.event.id}`
+    const ruta=`/protected/admin/servicios/servicio/?${selected.event.id}`
     setArg(() => selected)
     if (!arg) return//console.log('ARGUMENTO', JSON.stringify(arg, null, 2))
     setForm((prev) => ({
@@ -337,9 +338,9 @@ const Calendar: React.FC=() => {
 
   return (
     <div>
-      <div className='flex w-full px-10 justify-start items-start gap-8'>
+      <div className='flex w-full p-6 justify-start items-start gap-4'>
         <div className='w-3/12'>
-          <div className='py-10 text-2xl font-extrabold px-7'>
+          <div className='py-0 text-xl font-extrabold px-1'>
             Calendar Events
           </div>
           <ul className='space-y-4'>
@@ -350,37 +351,39 @@ const Calendar: React.FC=() => {
             )}
 
             {currentEvents.length>0&&
-              currentEvents.map((event: EventApi) => (
-                <li
-                  className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs'
-                  key={event.id+new Date().toLocaleTimeString()}
-                >
-                  {event.title}
-                  <br />
-                  <label className='text-slate-950 text-[10px]'>
-                    {formatDate(event.start!, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric"
-                    })}{" "}
-                    {/* Format event start date */}
-                  </label>
-                  <br />
+              currentEvents.sort((a, b) => a.start!>b.start!? -1:1)
+                .map((event: EventApi) => (
+                  <li
+                    className='border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800 text-xs'
+                    key={event.id+new Date().toLocaleTimeString()}
+                  >
+                    {event.title}
+                    <br />
+                    <label className='text-slate-950 text-[10px]'>
+                      {formatDate(event.start!, {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric"
+                      })}{" "}
+                      {/* Format event start date */}
+                    </label>
+                    <br />
 
-                  {event.extendedProps.ruta&&event.extendedProps.ruta}
-                  <br />
-                  {event.extendedProps.chofer&&event.extendedProps.chofer}
-                  <br />
-                  {event.extendedProps.precio_de_servicio? event.extendedProps.precio_de_servicio+' $':''}
+                    {event.extendedProps.ruta&&event.extendedProps.ruta}
+                    <br />
+                    {event.extendedProps.chofer&&event.extendedProps.chofer}
+                    <br />
+                    {event.extendedProps.precio_de_servicio? event.extendedProps.precio_de_servicio+' $':''}
 
 
-                </li>
-              ))}
+                  </li>
+                ))}
           </ul>
         </div>
 
         <div className='w-9/12 mt-8'>
           <FullCalendar
+
             height={"85vh"}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // Initialize calendar with required plugins.
             headerToolbar={{

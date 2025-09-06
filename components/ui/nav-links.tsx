@@ -13,14 +13,14 @@ import { usePathname } from 'next/navigation'
 // Depending on the size of the application, this would be stored in a database.
 const links=[
   { name: 'Home', href: '/protected', icon: HomeIcon },
-  { name: 'Dasboard', href: '/protected/servicios', icon: DamIcon },
+  { name: 'Dasboard', href: '/protected/admin/servicios', icon: DamIcon },
   {
     name: 'Statistics',
-    href: '/protected/estadisticas',
+    href: '/protected/admin/estadisticas',
     icon: PieChartIcon,
   },
-  { name: 'Users', href: '/protected/users', icon: UserGroupIcon },
-  { name: 'Vehicles', href: '/protected/vehicles', icon: TruckIcon },
+  { name: 'Users', href: '/protected/admin/users', icon: UserGroupIcon },
+  { name: 'Vehicles', href: '/protected/admin/vehicles', icon: TruckIcon },
 ]
 
 export default function NavLinks() {

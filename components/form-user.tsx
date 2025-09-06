@@ -39,7 +39,7 @@ export default function FormUser(user: any) {
         setIsLoading(true)
         const res=await updateProfile(first_name, last_name, phone, birthday, role, active, userId)
         setIsLoading(false)
-        redirect(`/protected/users/`)
+        redirect(`/protected/admin/users/`)
     }
 
     const handleDelete=async () => {
@@ -47,7 +47,7 @@ export default function FormUser(user: any) {
         setIsLoading(true)
         await deleteUser(userId)
         setIsLoading(false)
-        redirect(`/protected/users/`)
+        redirect(`/protected/admin/users/`)
     }
 
     useEffect(() => {

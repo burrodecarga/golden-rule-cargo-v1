@@ -38,7 +38,7 @@ export default async function VehiclesList() {
                                     <TableCell className="uppercase text-[12px]">{d.name}</TableCell>
                                     <TableCell className="uppercase text-[12px]"><CardImage url={d.document? d.document:FOTO} /></TableCell>
                                     <TableCell><Link href={
-                                        `/protected/vehicles/${d.id}`}><PencilSquareIcon /></Link></TableCell>
+                                        `/protected/admin/vehicles/${d.id}`}><PencilSquareIcon /></Link></TableCell>
 
                                 </TableRow>
                             ))}

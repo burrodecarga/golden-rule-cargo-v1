@@ -101,7 +101,7 @@ export interface ServicioNoId {
     bol: string
     broker: string
     carga: string
-    chofer: string
+    chofer: string|undefined
     chofer_id: string
     despachador: string
     destino: string
@@ -118,14 +118,14 @@ export interface ServicioNoId {
     orden: string
     origen: string
     peso: number
-    plataforma: string
+    plataforma: string|undefined
     pod: string
     precio_de_servicio: number
     precio_mano_de_obra: number
     rc: string
     ruta: string
     tipo_de_carga: string
-    vehiculo: string
+    vehiculo: string|undefined
     vehiculo_id: string
     ano: number
     dia: number

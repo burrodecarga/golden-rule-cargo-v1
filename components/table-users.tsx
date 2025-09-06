@@ -48,7 +48,7 @@ export default async function UsersTable() {
                   <TableCell className="flex flex-row gap-2 cursor-pointer text-blue-600 text-center">
 
                     <Link href={
-                      `/protected/users/${d.id}`}><PenSquareIcon /></Link>
+                      `/protected/admin/users/${d.id}`}><PenSquareIcon /></Link>
                   </TableCell>
                 </TableRow>
               ))}

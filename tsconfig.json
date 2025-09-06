@@ -34,7 +34,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/protected/servicios/servicio",
+    "app/protected/admin/servicios/servicio",
     "app/protected/documentos"
   ],
   "exclude": [
