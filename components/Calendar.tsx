@@ -339,7 +339,7 @@ const Calendar: React.FC=() => {
   return (
     <div>
       <div className='flex w-full p-6 justify-start items-start gap-4'>
-        <div className='w-3/12'>
+        <div className='hidden md:block w-3/12'>
           <div className='py-0 text-xl font-extrabold px-1'>
             Calendar Events
           </div>
@@ -381,7 +381,7 @@ const Calendar: React.FC=() => {
           </ul>
         </div>
 
-        <div className='w-9/12 mt-8'>
+        <div className='w-12/12 md:w-9/12 mt-8'>
           <FullCalendar
 
             height={"85vh"}

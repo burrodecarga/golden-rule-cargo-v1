@@ -4,7 +4,8 @@ import NavLinks from './nav-links'
 import { PowerIcon } from 'lucide-react'
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from 'next/router'
-export default function SideNav() {
+import { LogoutButton } from '../logout-button'
+export default function SideNav({ role }: { role: string }) {
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
       <Link
@@ -16,8 +17,10 @@ export default function SideNav() {
         </div>
       </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
-        <NavLinks />
-        <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
+        <NavLinks role={role} />
+        <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
+          <LogoutButton />
+        </div>
       </div>
     </div>
   )

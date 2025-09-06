@@ -1,34 +1,42 @@
 'use client'
+import { getProfile } from '@/lib/api_server'
+import { createClient } from '@/lib/client'
 import {
   UserGroupIcon,
   HomeIcon,
-  DocumentDuplicateIcon,
   TruckIcon,
 } from '@heroicons/react/24/outline'
 import { DamIcon, PieChartIcon } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname } from 'next/navigation'
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links=[
-  { name: 'Home', href: '/protected', icon: HomeIcon },
-  { name: 'Dasboard', href: '/protected/admin/servicios', icon: DamIcon },
+  { role: 'admin', name: 'Home', href: '/protected', icon: HomeIcon },
+  { role: 'admin', name: 'Dasboard', href: '/protected/admin/servicios', icon: DamIcon },
   {
-    name: 'Statistics',
+    role: 'admin', name: 'Statistics',
     href: '/protected/admin/estadisticas',
     icon: PieChartIcon,
   },
-  { name: 'Users', href: '/protected/admin/users', icon: UserGroupIcon },
-  { name: 'Vehicles', href: '/protected/admin/vehicles', icon: TruckIcon },
+  { role: 'admin', name: 'Users', href: '/protected/admin/users', icon: UserGroupIcon },
+  { role: 'admin', name: 'Vehicles', href: '/protected/admin/vehicles', icon: TruckIcon },
+  { role: 'chofer', name: 'Vehicles', href: '/protected/admin/vehicles', icon: TruckIcon },
+
 ]
 
-export default function NavLinks() {
+export default function NavLinks({ role }: { role: string }) {
 
   const pathName=usePathname()
+
+
   return (
     <>
       {links.map((link) => {
+        if (link.role!==role) {
+          return null
+        }
         const LinkIcon=link.icon
         return (
           <Link
