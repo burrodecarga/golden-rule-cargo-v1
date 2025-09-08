@@ -12,7 +12,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   const searchParams=useSearchParams()
 
   const currentPage=Number(searchParams.get('page'))
-  console.log('CURRENT PAGE', currentPage)
+  //console.log('CURRENT PAGE', currentPage)
 
 
   const allPages=generatePagination(currentPage, totalPages)
@@ -36,7 +36,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
         <div className="flex -space-x-px">
           {allPages.map((page, index) => {
-            console.log('PAGE', page, 'CURRENT', currentPage)
+            //console.log('PAGE', page, 'CURRENT', currentPage)
             let position: 'first'|'last'|'single'|'middle'|undefined
 
             if (index===0) position='first'

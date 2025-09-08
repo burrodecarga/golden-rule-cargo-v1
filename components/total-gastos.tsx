@@ -10,7 +10,7 @@ export default function TotalGastos({ id }: { id: string }) {
         if (result) {
             totalArray=result.map((a) => Number(a.monto))
             total=totalArray.reduce((a, b) => a+b, 0)
-            console.log('RESULTADO', totalArray, total)
+            //console.log('RESULTADO', totalArray, total)
         }
     }
 

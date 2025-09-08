@@ -17,9 +17,6 @@ export default async function ProtectedLayout({
   const { data: profile, error: profile_error }=await (await supabase).from('profiles').select('*').eq('id', data.user.id
   ).single()
 
-
-
-
   return (
     <main>
       <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">

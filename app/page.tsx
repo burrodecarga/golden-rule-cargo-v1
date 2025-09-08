@@ -12,8 +12,7 @@ export default async function Home() {
 
   const { data: profile, error: profile_error }=await (await supabase).from('profiles').select('*').eq('id', data.user.id
   ).single()
-
-  console.log(profile, data.user.id)
+  //console.log(profile, data.user.id)
   if (profile_error||!profile) {
     redirect("/auth/login")
   }

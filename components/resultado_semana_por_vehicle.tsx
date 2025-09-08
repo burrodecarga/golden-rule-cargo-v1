@@ -8,7 +8,7 @@ import { WEEKDAY } from '@/const/helper'
 
 export default async function RSemanaByVehiculo() {
     const result=await fetchVehiculoSemanas()
-    console.log(result)
+    //console.log(result)
 
     let totalArray: number[]=[]
     let total=0

@@ -21,7 +21,7 @@ export default function UploadSreenPersonal() {
 
     const router=useRouter()
 
-    console.log('NAME', id, name)
+    //console.log('NAME', id, name)
     if (props.isSuccess) {
         let publicUrl='https://stxsnrianylaldkorlgy.supabase.co/storage/v1/object/public/personal//'+props.successes[0]
         if (name?.toUpperCase()=='DRIVER_LICENSE_URL') {

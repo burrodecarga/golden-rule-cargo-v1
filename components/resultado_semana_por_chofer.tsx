@@ -8,7 +8,7 @@ import { WEEKDAY } from '@/const/helper'
 
 export default async function RSemanaByChofer() {
     const result=await fetchChoferSemanas()
-    console.log(result)
+    //console.log(result)
 
     let totalArray: number[]=[]
     let total=0

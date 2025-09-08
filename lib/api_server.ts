@@ -79,7 +79,7 @@ export const fetchFilteredServices=async (query: string, page: number) => {
         .order("start", {
             ascending: false
         })
-    console.log('SEVER', servicios)
+    //console.log('SEVER', servicios)
     return servicios
 }
 
@@ -93,7 +93,7 @@ export const fetchFilteredServicesById=async (id: string, query: string, page: n
         .order("start", {
             ascending: false
         })
-    console.log('SEVER', servicios)
+    //console.log('SEVER', servicios)
     return servicios
 }
 
@@ -292,7 +292,7 @@ export const fetchServiciosBySemanaChofer=async (semana: number, chofer: string)
         console.log("error", error)
         return []
     } else {
-        console.log('GANO')
+        //console.log('GANO')
         return data
     }
 }
@@ -306,7 +306,7 @@ export const fetchServiciosBySemanaVehiculo=async (semana: number, vehiculo: str
         console.log("error", error)
         return []
     } else {
-        console.log('GANO')
+        //console.log('GANO')
         return data
     }
 }
@@ -320,7 +320,7 @@ export const fetchServiciosBySemanaPlataforma=async (semana: number, plataforma:
         console.log("error", error)
         return []
     } else {
-        console.log('GANO')
+        //console.log('GANO')
         return data
     }
 }
@@ -335,7 +335,7 @@ export const fetchServiciosBySemana=async (semana: number) => {
         console.log("error", error)
         return []
     } else {
-        console.log('GANO')
+        //console.log('GANO')
         return data
     }
 }
@@ -455,7 +455,7 @@ export const deleteUser=async (id: string) => {
 }
 
 export const updateUserByLicense=async (id: string, driver_license_url: string) => {
-    console.log('SERVER', driver_license_url, id)
+    //console.log('SERVER', driver_license_url, id)
     const { data, error }=await supabase
         .from('profiles')
         .update({ driver_license_url: driver_license_url })
@@ -471,7 +471,7 @@ export const updateUserByLicense=async (id: string, driver_license_url: string) 
 }
 
 export const updateUserByMedical=async (id: string, medical_certificate_url: string) => {
-    console.log('SERVER', medical_certificate_url, id)
+    //console.log('SERVER', medical_certificate_url, id)
     const { data, error }=await supabase
         .from('profiles')
         .update({ medical_certificate_url: medical_certificate_url })
@@ -487,7 +487,7 @@ export const updateUserByMedical=async (id: string, medical_certificate_url: str
 }
 
 export const updateUserBySocial=async (id: string, social_security_url: string) => {
-    console.log('SERVER', social_security_url, id)
+    //console.log('SERVER', social_security_url, id)
     const { data, error }=await supabase
         .from('profiles')
         .update({ social_security_url: social_security_url })
@@ -503,7 +503,7 @@ export const updateUserBySocial=async (id: string, social_security_url: string) 
 }
 
 export const updateUserByW=async (id: string, w_9_url: string) => {
-    console.log('SERVER', w_9_url, id)
+    //console.log('SERVER', w_9_url, id)
     const { data, error }=await supabase
         .from('profiles')
         .update({ w_9_url: w_9_url })
@@ -519,7 +519,7 @@ export const updateUserByW=async (id: string, w_9_url: string) => {
 }
 
 export const updateUserByWork=async (id: string, work_permit_url: string) => {
-    console.log('SERVER', work_permit_url, id)
+    //console.log('SERVER', work_permit_url, id)
     const { data, error }=await supabase
         .from('profiles')
         .update({ work_permit_url: work_permit_url })
@@ -550,7 +550,7 @@ export const updateVehicle=async (name: string, vehicleId: string) => {
 }
 
 export const updateVehicleByDocument=async (vehicleId: string, document: string) => {
-    console.log('SERVER DOC', document, vehicleId)
+    //console.log('SERVER DOC', document, vehicleId)
     const { data, error }=await supabase
         .from('vehicles')
         .update({ document: document, })
@@ -565,7 +565,7 @@ export const updateVehicleByDocument=async (vehicleId: string, document: string)
 }
 
 export const updateVehicleByImage=async (vehicleId: string, image: string) => {
-    console.log('SERVER', image, vehicleId)
+    //console.log('SERVER', image, vehicleId)
     const { data, error }=await supabase
         .from('vehicles')
         .update({
